@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Test cors</title>
-
+    <title>Test CORS</title>
 </head>
 <body>
 <h1>My POST</h1>

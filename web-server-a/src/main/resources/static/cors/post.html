@@ -7,12 +7,12 @@
 <body>
 <div>
     <h1>Test write</h1>
-    <form action="http://localhost:8082/my/post" method="POST">
+    <form target="_blank" method="POST" action="http://localhost:8082/my/post">
         <input type="hidden" name="account" value="3456">
         <input type="submit" value="My - should Failed">
     </form>
 
-    <form action="http://localhost:8082/cors/post" method="POST">
+    <form target="_blank" method="POST" action="http://localhost:8082/cors/post">
         <input type="hidden" name="account" value="6543">
         <input type="submit" value="Cors">
     </form>
