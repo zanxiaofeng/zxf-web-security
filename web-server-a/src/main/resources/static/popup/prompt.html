@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Confirm</title>
+</head>
+<body>
+<input type="button" name="confirm" value="Prompt", onclick="onPrompt()">
+<script type="text/javascript">
+    function onPrompt(){
+        var result = prompt('Line one\nLine two\nPlease input your name: ', "Davis");
+        console.log("prompt: " + result);
+    }
+</script>
+</body>
+</html>

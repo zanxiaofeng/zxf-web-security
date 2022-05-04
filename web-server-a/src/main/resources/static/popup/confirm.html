@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Confirm</title>
+</head>
+<body>
+<input type="button" name="confirm" value="Confirm", onclick="onConfirm()">
+<script type="text/javascript">
+    function onConfirm(){
+        var result = confirm('Line one\nLine two\nLine three');
+        console.log("confirm: " + result);
+    }
+</script>
+</body>
+</html>

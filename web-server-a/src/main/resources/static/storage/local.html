@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Local Storage</title>
+</head>
+<body>
+<a href="/blank.html">Blank</a>
+<script type="text/javascript">
+    if (window.localStorage.getItem("localVariable")){
+        console.log("exists");
+    } else {
+        console.log("new");
+        window.localStorage.setItem("localVariable", Math.random());
+    }
+</script>
+</body>
+</html>

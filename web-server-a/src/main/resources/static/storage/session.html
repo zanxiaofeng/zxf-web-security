@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Session Storage</title>
+</head>
+<body>
+<a href="/blank.html">Blank</a>
+<script type="text/javascript">
+    if (window.sessionStorage.getItem("sessionVariable")){
+        console.log("exists");
+    } else {
+        console.log("new");
+        window.sessionStorage.setItem("sessionVariable", Math.random());
+    }
+</script>
+</body>
+</html>
