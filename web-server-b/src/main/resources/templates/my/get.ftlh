@@ -6,6 +6,7 @@
 
 </head>
 <body>
-<h1>My POST</h1>
+<h1>My GET</h1>
+<span>Account: ${account}<span>
 </body>
 </html>

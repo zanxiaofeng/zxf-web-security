@@ -7,11 +7,18 @@
 <body>
 <div>
     <h1>Test write</h1>
-    <a href="http://localhost:8082/my/get?account=1213455"/>
+    <form action="http://localhost:8082/my/post" method="POST">
+        <input type="hidden" name="account" value="3456">
+        <input type="submit" value="My - should Failed">
+    </form>
+
+    <form action="http://localhost:8082/cors/post" method="POST">
+        <input type="hidden" name="account" value="6543">
+        <input type="submit" value="Cors">
+    </form>
 </div>
 <div>
     <h1>Test ajax</h1>
-    <a href="http://localhost:8082/my/get?account=1213455"/>
 </div>
 </body>
 </html>

@@ -12,11 +12,15 @@ import org.springframework.web.servlet.ModelAndView;
 public class MyController {
     @GetMapping("/get")
     public ModelAndView get(@RequestParam String account) {
-        return new ModelAndView("my/get");
+        ModelAndView modelAndView = new ModelAndView("my/get");
+        modelAndView.addObject("account", account);
+        return modelAndView;
     }
 
     @PostMapping("/post")
     public ModelAndView post(@RequestParam String account) {
-        return new ModelAndView("my/post");
+        ModelAndView modelAndView = new ModelAndView("my/post");
+        modelAndView.addObject("account", account);
+        return modelAndView;
     }
 }
