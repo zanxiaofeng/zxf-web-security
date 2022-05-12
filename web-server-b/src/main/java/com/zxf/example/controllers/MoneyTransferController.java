@@ -17,6 +17,7 @@ public class MoneyTransferController {
 
     @PostMapping("/transfer")
     public ModelAndView transfer_to(@RequestParam String sourceAccount, String targetAccount, String amount) {
+        System.out.println(amount + " has been transfer from " + sourceAccount + " to " + targetAccount);
         ModelAndView modelAndView = new ModelAndView("money/transfer_result");
         modelAndView.addObject("sourceAccount", sourceAccount);
         modelAndView.addObject("targetAccount", targetAccount);
