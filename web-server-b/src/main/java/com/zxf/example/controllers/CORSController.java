@@ -2,34 +2,33 @@ package com.zxf.example.controllers;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collections;
 import java.util.Map;
 
-@Controller
-@RequestMapping("/my")
-public class MyController {
+@RestController
+@RequestMapping("/cors")
+@CrossOrigin(origins = "http://localhost:8081", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT}, allowCredentials = "true", maxAge = 3600)
+public class CORSController {
     @GetMapping("/get")
     public Map<String, String> get(@RequestParam String account) {
-        return Collections.singletonMap("my-account-get", account);
+        return Collections.singletonMap("cors-account-get", account);
 
     }
 
     @PostMapping("/post")
     public Map<String, String> post(@RequestParam String account) {
-        return Collections.singletonMap("my-account-post", account);
+        return Collections.singletonMap("cors-account-post", account);
     }
 
     @PostMapping("/put")
     public Map<String, String> put(@RequestBody Map<String, String> request) {
-        return Collections.singletonMap("my-account-put", request.get("account"));
+        return Collections.singletonMap("cors-account-put", request.get("account"));
     }
 
 //    @GetMapping("/img")
 //    public Resource img() {
-//        return new ClassPathResource("/images/my.jpg");
+//        return new ClassPathResource("/images/cors.jpg");
 //    }
 }

@@ -36,9 +36,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>com.zxf.example.MyApplication</mainClass>
-                </configuration>
             </plugin>
         </plugins>
     </build>
