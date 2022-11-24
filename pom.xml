@@ -18,6 +18,7 @@
 	<modules>
 		<module>web-server-tester</module>
         <module>web-server-cors</module>
+		<module>web-server-csrf</module>
     </modules>
 
 	<properties>
