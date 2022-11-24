@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web server CSRF</title>
+</head>
+<body>
+<h1>Welcome to Web server CSRF</h1>
+<div>
+    <h1>Money Transfer(CSRF Protected)</h1>
+    <form method="post" action="/money/transfer" target="_blank">
+        <input type="hidden" name="sourceAccount" value="1234567">
+        <input type="hidden" name="targetAccount" value="3214455">
+        Transfer Amount: <input type="text" name="amount" value="1000">
+        <input type="submit" value="Transfer will success">
+    </form>
+</div>
+</body>
+</html>

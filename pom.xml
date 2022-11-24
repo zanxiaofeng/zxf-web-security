@@ -16,8 +16,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<modules>
-		<module>web-server-a</module>
-        <module>web-server-b</module>
+		<module>web-server-tester</module>
+        <module>web-server-cors</module>
     </modules>
 
 	<properties>
