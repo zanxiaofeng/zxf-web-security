@@ -1,0 +1,1 @@
+console.log("cors.js in http://localhost:8082")

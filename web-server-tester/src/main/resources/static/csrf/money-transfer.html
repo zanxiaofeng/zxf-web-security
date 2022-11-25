@@ -7,12 +7,13 @@
 </head>
 <body>
 <div>
-    <form method="post" action="http://localhost:8082/money/stransfer" target="_blank">
+    <form method="POST" action="http://localhost:8083/money/stransfer" target="_self">
         <input type="hidden" name="sourceAccount" value="1234567">
         <input type="hidden" name="targetAccount" value="3214455">
         Transfer Amount: <input type="text" name="amount" value="1000">
+        CSRF Token: <input type="text" name="amount" value="">
         <br>
-        <input type="submit" value="Attack will failed">
+        <input type="submit" value="Attack will failed if no CSRF Token">
     </form>
 </div>
 </body>

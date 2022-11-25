@@ -1,0 +1,1 @@
+console.log("my.js in http://localhost:8082")

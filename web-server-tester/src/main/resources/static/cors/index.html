@@ -5,10 +5,10 @@
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <title>CORS Test</title>
     <script>
-        function ajax(method, url) {
+        function ajaxGet(url) {
             return new Promise(function(resolve, reject) {
                 var request = new XMLHttpRequest();
-                request.open(method, url, true);
+                request.open("GET", url, true);
                 request.onload = function(event) {
                     console.log(event);
                 };
@@ -18,11 +18,25 @@
                 request.send();
             });
         }
+        function ajaxPut(url) {
+            return new Promise(function(resolve, reject) {
+                var request = new XMLHttpRequest();
+                request.open("PUT", url, true);
+                request.onload = function(event) {
+                    console.log(event);
+                };
+                request.onerror = function(event) {
+                    console.log(event);
+                };
+                request.setRequestHeader("Content-Type", "application/json")
+                request.send('{"account": "45454"}');
+            });
+        }
     </script>
 </head>
 <body>
 <div>
-    <h1>Test href link</h1>
+    <h1>Test a href link</h1>
     <h2>Request will not include origin request header</h2>
     <a target="_self" href="http://localhost:8082/my/get?account=12345">My</a>
     <br>
@@ -30,9 +44,21 @@
 </div>
 
 <div>
-    <h1>Test src read(GET)</h1>
-    <p>My - should Failed:<img src="http://localhost:8082/my/img"/></p>
-    <p>Cors:<img src="http://localhost:8082/cors/img"/></p>
+    <h1>Test img src read(GET)</h1>
+    <h2>Request will not include origin request header</h2>
+    <p>My - should Failed:<img src="http://localhost:8082/my/img"></p>
+    <p>Cors:<img src="http://localhost:8082/cors/img"></p>
+</div>
+
+<div>
+    <h1>Test script src read(GET)</h1>
+    <h2>Request will not include origin request header</h2>
+    <p>My - should Failed:
+        <script src="http://localhost:8082/my/my.js"></script>
+    </p>
+    <p>Cors:
+        <script src="http://localhost:8082/cors/cors.js"></script>
+    </p>
 </div>
 
 <div>
@@ -51,14 +77,17 @@
 <div>
     <h1>Test ajax read(GET)</h1>
     <h2>Request will include origin request header with value 'http://localhost:8081'</h2>
-    <input type="button" value="My - should Failed" onclick="ajax('GET', 'http://localhost:8082/my/get?account=12345')">
+    <input type="button" value="My - should Failed" onclick="ajaxGet('http://localhost:8082/my/get?account=12345')">
     <br/>
-    <input type="button" value="Cors" onclick="ajax('GET', 'http://localhost:8082/cors/get?account=54321')">
+    <input type="button" value="Cors" onclick="ajaxGet('http://localhost:8082/cors/get?account=54321')">
 </div>
 
 <div>
     <h1>Test ajax write(PUT)</h1>
-
+    <h2>Request will include origin request header with value 'http://localhost:8081'</h2>
+    <input type="button" value="My - should Failed" onclick="ajaxPut('http://localhost:8082/my/put')">
+    <br/>
+    <input type="button" value="Cors" onclick="ajaxPut('http://localhost:8082/cors/put')">
 </div>
 </body>
 </html>

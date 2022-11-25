@@ -1,5 +1,7 @@
 package com.zxf.example.controllers;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -18,13 +20,13 @@ public class MyController {
         return Collections.singletonMap("my-account-post", account);
     }
 
-    @PostMapping("/put")
+    @PutMapping("/put")
     public Map<String, String> put(@RequestBody Map<String, String> request) {
         return Collections.singletonMap("my-account-put", request.get("account"));
     }
 
-//    @GetMapping("/img")
-//    public Resource img() {
-//        return new ClassPathResource("/images/my.jpg");
-//    }
+    @GetMapping("/img")
+    public Resource img() {
+        return new ClassPathResource("/images/my-img.png");
+    }
 }

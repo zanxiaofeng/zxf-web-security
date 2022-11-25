@@ -5,27 +5,30 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @Controller
-@RequestMapping("/money")
 public class MoneyTransferController {
 
-    @GetMapping("/transfer")
+    @GetMapping("/")
     public ModelAndView transfer_form() {
         ModelAndView modelAndView = new ModelAndView("money/transfer_form");
         return modelAndView;
     }
 
-    @PostMapping("/transfer")
-    public ModelAndView transfer_to(@RequestParam String sourceAccount, @RequestParam String targetAccount, @RequestParam String amount, HttpServletRequest request) {
+    @PostMapping("/money/transfer")
+    public ModelAndView transfer_to(@RequestParam String sourceAccount, @RequestParam String targetAccount, @RequestParam String amount,
+                                    @RequestParam(name = "_csrf", required = false) String csrf, HttpServletRequest request) {
         System.out.println(amount + " has been transfer from " + sourceAccount + " to " + targetAccount);
         ModelAndView modelAndView = new ModelAndView("money/transfer_result");
         modelAndView.addObject("sourceAccount", sourceAccount);
         modelAndView.addObject("targetAccount", targetAccount);
         modelAndView.addObject("amount", amount);
-        modelAndView.addObject("csfrTokenFromCookie", WebUtils.getCookie(request, ""));
-        modelAndView.addObject("csfrTokenFromRequest", request.getParameterValues(""));
+        modelAndView.addObject("csrfTokenFromCookie",
+                Optional.ofNullable(WebUtils.getCookie(request, "XSRF-TOKEN")).map(Cookie::getValue).orElse(""));
+        modelAndView.addObject("csrfTokenFromRequest", csrf);
         return modelAndView;
     }
 }

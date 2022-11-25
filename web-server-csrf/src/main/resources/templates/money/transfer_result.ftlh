@@ -9,8 +9,8 @@
 <h1>CSRF test result on Origin(Money Transfer)</h1>
 <span>${amount} has been transfer from ${sourceAccount} to ${targetAccount}<span>
 <br>
-<span>csfrTokenFromCookie: ${csfrTokenFromCookie}<span>
+<span>csrfTokenFromCookie: ${csrfTokenFromCookie}<span>
 <br>
-<span>csfrTokenFromRequest: ${csfrTokenFromRequest}<span>
+<span>csrfTokenFromRequest: ${csrfTokenFromRequest}<span>
 </body>
 </html>

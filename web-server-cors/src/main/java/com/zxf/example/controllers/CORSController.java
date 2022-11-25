@@ -1,5 +1,7 @@
 package com.zxf.example.controllers;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -21,13 +23,13 @@ public class CORSController {
         return Collections.singletonMap("cors-account-post", account);
     }
 
-    @PostMapping("/put")
+    @PutMapping("/put")
     public Map<String, String> put(@RequestBody Map<String, String> request) {
         return Collections.singletonMap("cors-account-put", request.get("account"));
     }
 
-//    @GetMapping("/img")
-//    public Resource img() {
-//        return new ClassPathResource("/images/cors.jpg");
-//    }
+    @GetMapping("/img")
+    public Resource img() {
+        return new ClassPathResource("/images/cors-img.png");
+    }
 }
