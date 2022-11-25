@@ -1,18 +1,16 @@
 package com.zxf.example.controllers;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/my")
 public class MyController {
     @GetMapping("/get")
     public Map<String, String> get(@RequestParam String account) {
         return Collections.singletonMap("my-account-get", account);
-
     }
 
     @PostMapping("/post")

@@ -23,22 +23,21 @@
 <body>
 <div>
     <h1>Test href link</h1>
-    <a target="_blank" href="http://localhost:8082/my/get?account=12345">My</a>
+    <h2>Request will not include origin request header</h2>
+    <a target="_self" href="http://localhost:8082/my/get?account=12345">My</a>
     <br>
-    <a target="_blank" href="http://localhost:8082/cors/get?account=54321">Cors</a>
+    <a target="_self" href="http://localhost:8082/cors/get?account=54321">Cors</a>
 </div>
 
 <div>
     <h1>Test src read(GET)</h1>
-    My - should Failed:
-    <img src="http://localhost:8082/my/img"/>
-    <br>
-    Cors:
-    <img src="http://localhost:8082/cors/img"/>
+    <p>My - should Failed:<img src="http://localhost:8082/my/img"/></p>
+    <p>Cors:<img src="http://localhost:8082/cors/img"/></p>
 </div>
 
 <div>
     <h1>Test form write(POST)</h1>
+    <h2>Request will include origin request header with value 'http://localhost:8081'</h2>
     <form target="_self" method="POST" action="http://localhost:8082/my/post">
         <input type="hidden" name="account" value="3456">
         <input type="submit" value="My - should Failed">
@@ -51,6 +50,7 @@
 
 <div>
     <h1>Test ajax read(GET)</h1>
+    <h2>Request will include origin request header with value 'http://localhost:8081'</h2>
     <input type="button" value="My - should Failed" onclick="ajax('GET', 'http://localhost:8082/my/get?account=12345')">
     <br/>
     <input type="button" value="Cors" onclick="ajax('GET', 'http://localhost:8082/cors/get?account=54321')">

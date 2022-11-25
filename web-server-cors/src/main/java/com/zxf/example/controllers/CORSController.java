@@ -5,14 +5,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.Map;
 
+import static org.springframework.web.bind.annotation.RequestMethod.*;
+
 @RestController
 @RequestMapping("/cors")
-@CrossOrigin(origins = "http://localhost:8082,http://localhost:8081", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT}, allowCredentials = "true", maxAge = 3600)
+@CrossOrigin(origins = {"http://localhost:8082", "http://localhost:8081"}, methods = {GET, POST, PUT}, allowCredentials = "true", maxAge = 3600)
 public class CORSController {
     @GetMapping("/get")
     public Map<String, String> get(@RequestParam String account) {
         return Collections.singletonMap("cors-account-get", account);
-
     }
 
     @PostMapping("/post")
