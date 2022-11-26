@@ -72,6 +72,10 @@
         <input type="hidden" name="account" value="6543">
         <input type="submit" value="Cors">
     </form>
+    <form target="_self" method="POST" action="http://localhost:8082/default/post">
+        <input type="hidden" name="account" value="6543">
+        <input type="submit" value="Default">
+    </form>
 </div>
 
 <div>
@@ -80,6 +84,8 @@
     <input type="button" value="My - should Failed" onclick="ajaxGet('http://localhost:8082/my/get?account=12345')">
     <br/>
     <input type="button" value="Cors" onclick="ajaxGet('http://localhost:8082/cors/get?account=54321')">
+    <br/>
+    <input type="button" value="Default will be blocked on browser side" onclick="ajaxGet('http://localhost:8082/default/get?account=54321')">
 </div>
 
 <div>
@@ -88,6 +94,8 @@
     <input type="button" value="My - should Failed" onclick="ajaxPut('http://localhost:8082/my/put')">
     <br/>
     <input type="button" value="Cors" onclick="ajaxPut('http://localhost:8082/cors/put')">
+    <br/>
+    <input type="button" value="Default will be blocked on server side" onclick="ajaxPut('http://localhost:8082/default/put')">
 </div>
 </body>
 </html>

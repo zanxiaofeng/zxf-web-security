@@ -12,13 +12,10 @@ public class GlobalCORSConfiguration {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
+                //Disable cross domain request
                 registry.addMapping("/my/**")
-                        .allowedOrigins("https://localhost:8082")
-                        .allowedMethods("GET", "POST", "PUT")
-                        //.allowedHeaders("")
-                        //.exposedHeaders("")
-                        .allowCredentials(true)
-                        .maxAge(3600);
+                        .allowedOrigins()
+                        .allowedMethods();
             }
         };
     }

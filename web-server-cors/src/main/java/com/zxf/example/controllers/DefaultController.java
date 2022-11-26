@@ -9,27 +9,24 @@ import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+/*
+
+ */
 @RestController
-@RequestMapping("/cors")
-@CrossOrigin(origins = {"http://localhost:8081"}, methods = {GET, POST, PUT}, allowCredentials = "true", maxAge = 3600)
-public class CORSController {
+@RequestMapping("/default")
+public class DefaultController {
     @GetMapping("/get")
     public Map<String, String> get(@RequestParam String account) {
-        return Collections.singletonMap("cors-account-get", account);
+        return Collections.singletonMap("default-account-get", account);
     }
 
     @PostMapping("/post")
     public Map<String, String> post(@RequestParam String account) {
-        return Collections.singletonMap("cors-account-post", account);
+        return Collections.singletonMap("default-account-post", account);
     }
 
     @PutMapping("/put")
     public Map<String, String> put(@RequestBody Map<String, String> request) {
-        return Collections.singletonMap("cors-account-put", request.get("account"));
-    }
-
-    @GetMapping("/img")
-    public Resource img() {
-        return new ClassPathResource("/images/cors-img.png");
+        return Collections.singletonMap("default-account-put", request.get("account"));
     }
 }
