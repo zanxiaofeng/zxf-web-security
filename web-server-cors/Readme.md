@@ -1,6 +1,7 @@
 # Two type CORS requests
 ## Simple cross domain request(one request)
-- GET, POST
+- GET, POST, HEAD
+- 使用 Origin 和 Access-Control-Allow-Origin在服务器端(By Origin)或浏览器端(By Access-Control-Allow-Origin)实施访问控制。
 ## With preflight cross domain request(two requests, one is preflight and another is real)
 - PUT, DELETE, HEAD
 
@@ -9,6 +10,7 @@
 - /my/** Has CORS Config(Disable cross domain request)
 - /cors/** Has CORS Config(Allow cross domain request from http://localhost:8080)
 - others No CORS config(Allow cross request for any domain and simple request, will block preflight request)
+- 预检OPTIONS 是 HTTP/1.1 协议中定义的方法，用以从服务器获取更多信息, 使用Access-Control-Request-Method, Access-Control-Request-Headers可以获取url指定服务端资源CORS访问控制信息（Access-Control-Allow-Origin, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Access-Control-Max-Age），并由浏览器对随后的真实请求实施访问控制。
 
 # Core classes
 - org.springframework.web.filter.CorsFilter(好像没有用到)
