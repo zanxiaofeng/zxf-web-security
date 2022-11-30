@@ -20,8 +20,8 @@
 - org.springframework.security.web.access.ExceptionTranslationFilter
 
 # 服务器端如何判断一个请求是否为跨域请求
--　请求带有Origin Header
--　请求中的schema，host，port与Origin Header中的schema，host，port完全一致
+- 请求带有Origin Header
+- 请求中的schema，host，port与Origin Header中的schema，host，port完全一致(不完全需要)
 
 # 客户端如何发出跨域请求
 - 跨域请求只针对浏览器，因为只有浏览器知道当前域和目标域
@@ -29,5 +29,5 @@
 - 对于浏览器自己发出的请求和JS ajax发出的请求处理会有不同
 
 # CORS 请求处理
-- 对于CORS请求的处理，需要浏览器和服务器共同配置才能做到，Server端可以根据自己定义的CORS规则Reject请求，浏览器也可以根据自己的规则在某些情况下阻止读取CORS请求的Response
+- 对于CORS请求的处理，需要浏览器和服务器共同协作相互配合才能做到，Server端可以根据自己定义的CORS规则Reject请求，浏览器也可以根据自己的规则在某些情况下阻止读取CORS请求的Response
 - 对于CORS请求，服务端能做的决策就是是否要Reject该请求，浏览器能做的决策包括是否可以发出该CORS请求以及是否可以把该CORS请求的Response返回给请求者(JS)
