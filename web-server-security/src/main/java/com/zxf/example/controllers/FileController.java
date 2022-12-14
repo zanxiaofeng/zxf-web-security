@@ -24,6 +24,11 @@ public class FileController {
         return new FileSystemResource(Paths.get(FOLDER).resolve(fileName).toFile());
     }
 
+    @GetMapping("/un-security/{fileName}")
+    public FileSystemResource unSecurityByPath(@PathVariable String fileName) {
+        return new FileSystemResource(Paths.get(FOLDER).resolve(fileName).toFile());
+    }
+
     public boolean isSecurityAccess(String folder, String fileName) {
         Path folderPath = Paths.get(folder).normalize();
         System.out.println("Folder: " + folderPath.toAbsolutePath());
