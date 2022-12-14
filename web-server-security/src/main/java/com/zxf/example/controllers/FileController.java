@@ -3,6 +3,7 @@ package com.zxf.example.controllers;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -13,6 +14,15 @@ public class FileController {
 
     @GetMapping("/security")
     public FileSystemResource security(@RequestParam String fileName) {
+        if (isSecurityAccess(FOLDER, fileName)) {
+            return new FileSystemResource(Paths.get(FOLDER).resolve(fileName).toFile());
+        }
+        throw new RuntimeException("Bad request");
+    }
+
+    @GetMapping("/security/**")
+    public FileSystemResource securityByPath(HttpServletRequest request) {
+        String fileName = request.getRequestURI().substring(15);
         if (isSecurityAccess(FOLDER, fileName)) {
             return new FileSystemResource(Paths.get(FOLDER).resolve(fileName).toFile());
         }
