@@ -30,8 +30,8 @@ http://localhost:8084/file/un-security/../home.txt[=>http://localhost:8084/file/
 http://localhost:8084/file/un-security/..%2Fhome.txt[400 Bad Request]
 
 # Content Type
-- txt=>text/html
-- png=>text/html
-- pdf=>text/html
-- xlsx=>text/html
-- docx=>text/html
+- txt=>image/png
+- png=>image/png
+- pdf=>application/pdf
+- xlsx=>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+- docx=>application/vnd.openxmlformats-officedocument.wordprocessingml.document
