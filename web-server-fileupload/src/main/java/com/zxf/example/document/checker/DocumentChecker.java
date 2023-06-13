@@ -1,7 +1,7 @@
 package com.zxf.example.document.checker;
 
-import org.springframework.web.multipart.MultipartFile;
+import java.io.BufferedInputStream;
 
 public interface DocumentChecker {
-    boolean isSafe(MultipartFile file);
+    boolean isSafe(BufferedInputStream inputStream, String fileName);
 }

@@ -35,3 +35,12 @@ http://localhost:8084/file/un-security/..%2Fhome.txt[400 Bad Request]
 - pdf=>application/pdf
 - xlsx=>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 - docx=>application/vnd.openxmlformats-officedocument.wordprocessingml.document
+
+# Test XXE
+curl --location --request POST 'http://localhost:8084/xml//DocumentBuilder/security-1' \
+  --header 'Content-Type: text/plain' \
+  --data-raw '<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE foo [
+  <!ELEMENT foo ANY >
+  <!ENTITY xxe SYSTEM "file:////etc/passwd" >]>
+<foo>&xxe;</foo>'

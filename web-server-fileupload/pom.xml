@@ -26,19 +26,9 @@
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
         <dependency>
-            <groupId>aspose.com</groupId>
-            <artifactId>aspose-cells</artifactId>
-            <version>8.7.0</version>
-        </dependency>
-        <dependency>
-            <groupId>aspose.com</groupId>
+            <groupId>com.luhuiguo</groupId>
             <artifactId>aspose-words</artifactId>
-            <version>16.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>aspose.com</groupId>
-            <artifactId>aspose-slides</artifactId>
-            <version>18.4.0</version>
+            <version>22.9</version>
         </dependency>
     </dependencies>
 
