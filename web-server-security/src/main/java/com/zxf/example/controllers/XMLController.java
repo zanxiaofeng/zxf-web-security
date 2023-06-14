@@ -11,8 +11,13 @@ import org.xml.sax.SAXException;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringReader;
 
 @RestController
 @RequestMapping("/xml")
@@ -46,9 +51,44 @@ public class XMLController {
         return getContent(dbf, xml);
     }
 
+    @PostMapping("/XMLInputFactory/security-1")
+    public String securityXMLInputFactory1(@RequestBody String xml) throws XMLStreamException {
+        System.out.println("XMLController::securityXMLInputFactory1" + xml);
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+        return getContent(xmlInputFactory, xml);
+    }
+
+    @PostMapping("/XMLInputFactory/security-2")
+    public String securityXMLInputFactory2(@RequestBody String xml) throws XMLStreamException {
+        System.out.println("XMLController::securityXMLInputFactory2" + xml);
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        xmlInputFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        xmlInputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+        return getContent(xmlInputFactory, xml);
+    }
+
+    @PostMapping("/XMLInputFactory/un-security")
+    public String unSecurityXMLInputFactory(@RequestBody String xml) throws XMLStreamException {
+        System.out.println("XMLController::unSecurityXMLInputFactory" + xml);
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        return getContent(xmlInputFactory, xml);
+    }
+
     private String getContent(DocumentBuilderFactory dbf, String xml) throws ParserConfigurationException, IOException, SAXException {
         Document document = dbf.newDocumentBuilder().parse(new ByteArrayInputStream(xml.getBytes()));
         Element element = document.getDocumentElement();
         return element.getFirstChild().getTextContent();
+    }
+
+    private String getContent(XMLInputFactory xmlInputFactory, String xml) throws XMLStreamException {
+        XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(new StringReader(xml));
+        while (xmlStreamReader.hasNext()) {
+            int type = xmlStreamReader.next();
+            if (type == XMLStreamConstants.START_ELEMENT) {
+                return xmlStreamReader.getElementText();
+            }
+        }
+        return null;
     }
 }
