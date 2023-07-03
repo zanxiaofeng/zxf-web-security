@@ -13,7 +13,7 @@ public class WordDocumentChecker implements DocumentChecker {
     private static final List<String> ALLOWED_FORMAT = Arrays.asList("doc", "docx", "dot");
 
     @Override
-    public boolean isSafe(BufferedInputStream inputStream, String fileName) throws Exception {
+    public boolean isSafe(BufferedInputStream inputStream, String fileName) {
         try {
             if (!isAllowedFormat(inputStream)) {
                 return false;
