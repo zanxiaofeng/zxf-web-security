@@ -1,27 +1,54 @@
 package com.zxf.example.document.checker;
 
-import org.springframework.web.multipart.MultipartFile;
+import com.aspose.words.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 
-public class WordDocumentChecker implements DocumentChecker{
+
+@Slf4j
+public class WordDocumentChecker implements DocumentChecker {
+    private static final List<String> ALLOWED_FORMAT = Arrays.asList("doc", "docx", "dot");
 
     @Override
-    public boolean isSafe(BufferedInputStream inputStream, String fileName) {
-        return false;
+    public boolean isSafe(BufferedInputStream inputStream, String fileName) throws Exception {
+        try {
+            if (!isAllowedFormat(inputStream)) {
+                return false;
+            }
+
+            return hasSafeContent(inputStream);
+        } catch (Exception ex) {
+            log.error("Exception during World file analysis.", ex);
+            return false;
+        }
     }
 
-    private Boolean isAllowedFormat(BufferedInputStream stream) throws IOException {
+    private Boolean isAllowedFormat(BufferedInputStream stream) throws Exception {
         stream.reset();
 
-        return false;
+        FileFormatInfo fileFormatInfo = FileFormatUtil.detectFileFormat(stream);
+        String formatExtension = FileFormatUtil.loadFormatToExtension(fileFormatInfo.getLoadFormat());
+        return ALLOWED_FORMAT.contains(formatExtension);
     }
 
-    private Boolean hasSafeContent(BufferedInputStream stream) throws IOException {
+    private Boolean hasSafeContent(BufferedInputStream stream) throws Exception {
         stream.reset();
 
-        return false;
+        Document document = new Document(stream);
+        if (document.hasMacros()) {
+            return false;
+        }
+
+        NodeCollection shapes = document.getChildNodes(NodeType.SHAPE, true);
+        for (int i = 0; i < shapes.getCount(); i++) {
+            if (((Shape) shapes.get(i)).getOleFormat() != null) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
