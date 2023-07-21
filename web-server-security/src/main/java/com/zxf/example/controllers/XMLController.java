@@ -77,15 +77,15 @@ public class XMLController {
 
     private String getContent(DocumentBuilderFactory dbf, String xml) throws ParserConfigurationException, IOException, SAXException {
         Document document = dbf.newDocumentBuilder().parse(new ByteArrayInputStream(xml.getBytes()));
-        Element element = document.getDocumentElement();
-        return element.getFirstChild().getTextContent();
+        Element root = document.getDocumentElement();
+        return root.getFirstChild().getTextContent();
     }
 
     private String getContent(XMLInputFactory xmlInputFactory, String xml) throws XMLStreamException {
         XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(new StringReader(xml));
         while (xmlStreamReader.hasNext()) {
-            int type = xmlStreamReader.next();
-            if (type == XMLStreamConstants.START_ELEMENT) {
+            int event = xmlStreamReader.next();
+            if (event == XMLStreamConstants.START_ELEMENT) {
                 return xmlStreamReader.getElementText();
             }
         }
