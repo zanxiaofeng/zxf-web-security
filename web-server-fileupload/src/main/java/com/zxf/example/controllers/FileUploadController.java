@@ -1,18 +1,16 @@
 package com.zxf.example.controllers;
 
-import com.zxf.example.document.checker.WordDocumentChecker;
+import com.zxf.example.document.checker.DocumentChecker;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 @Controller
 public class FileUploadController {
-    WordDocumentChecker wordDocumentChecker;
 
     @GetMapping("/fileUploader")
     public ModelAndView fileUploader() {
@@ -21,9 +19,9 @@ public class FileUploadController {
     }
 
     @PostMapping("/uploadFile")
-    public ModelAndView uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+    public ModelAndView uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
         try (InputStream stream = file.getInputStream()){
-            if (!wordDocumentChecker.isSafe(new BufferedInputStream(stream), file.getName())){
+            if (!DocumentChecker.isSafeDocument(stream, file.getName())){
                 throw  new RuntimeException("Unsafe word file!");
             }
 

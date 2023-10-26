@@ -4,19 +4,29 @@ import com.aspose.slides.IOleObjectFrame;
 import com.aspose.slides.IShape;
 import com.aspose.slides.ISlide;
 import com.aspose.slides.Presentation;
+import com.aspose.words.FileFormatInfo;
+import com.aspose.words.FileFormatUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
-import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.List;
 
-
 @Slf4j
+@Component
 public class PowerpointDocumentChecker implements DocumentChecker {
+
+    private static final List<String> ALLOWED_FORMATS = Arrays.asList(".ppt", ".pptx");
+
+    public PowerpointDocumentChecker() {
+        DocumentChecker.register("ppt", this);
+    }
+
     @Override
-    public boolean isSafe(BufferedInputStream inputStream, String fileName) {
+    public boolean isSafe(ByteArrayInputStream inputStream, String fileName, FileFormatInfo fileFormatInfo) {
         try {
-            if (!isAllowedFormat(inputStream)) {
+            if (!isAllowedFormat(fileFormatInfo)) {
                 return false;
             }
 
@@ -27,11 +37,12 @@ public class PowerpointDocumentChecker implements DocumentChecker {
         }
     }
 
-    private Boolean isAllowedFormat(BufferedInputStream stream) throws Exception {
-        return true;
+    private Boolean isAllowedFormat(FileFormatInfo fileFormatInfo) throws Exception {
+        String formatExtension = FileFormatUtil.loadFormatToExtension(fileFormatInfo.getLoadFormat());
+        return ALLOWED_FORMATS.contains(formatExtension);
     }
 
-    private Boolean hasSafeContent(BufferedInputStream stream) throws Exception {
+    private Boolean hasSafeContent(ByteArrayInputStream stream) throws Exception {
         stream.reset();
 
         Presentation presentation = new Presentation(stream);

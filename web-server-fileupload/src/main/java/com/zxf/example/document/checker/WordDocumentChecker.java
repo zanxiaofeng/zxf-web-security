@@ -2,20 +2,26 @@ package com.zxf.example.document.checker;
 
 import com.aspose.words.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
-import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.List;
 
 
 @Slf4j
+@Component
 public class WordDocumentChecker implements DocumentChecker {
-    private static final List<String> ALLOWED_FORMAT = Arrays.asList("doc", "docx", "dot");
+    private static final List<String> ALLOWED_FORMATS = Arrays.asList(".doc", ".docx", ".dot");
+
+    public WordDocumentChecker() {
+        DocumentChecker.register("word", this);
+    }
 
     @Override
-    public boolean isSafe(BufferedInputStream inputStream, String fileName) {
+    public boolean isSafe(ByteArrayInputStream inputStream, String fileName, FileFormatInfo fileFormatInfo) {
         try {
-            if (!isAllowedFormat(inputStream)) {
+            if (!isAllowedFormat(fileFormatInfo)) {
                 return false;
             }
 
@@ -26,15 +32,12 @@ public class WordDocumentChecker implements DocumentChecker {
         }
     }
 
-    private Boolean isAllowedFormat(BufferedInputStream stream) throws Exception {
-        stream.reset();
-
-        FileFormatInfo fileFormatInfo = FileFormatUtil.detectFileFormat(stream);
+    private Boolean isAllowedFormat(FileFormatInfo fileFormatInfo) throws Exception {
         String formatExtension = FileFormatUtil.loadFormatToExtension(fileFormatInfo.getLoadFormat());
-        return ALLOWED_FORMAT.contains(formatExtension);
+        return ALLOWED_FORMATS.contains(formatExtension);
     }
 
-    private Boolean hasSafeContent(BufferedInputStream stream) throws Exception {
+    private Boolean hasSafeContent(ByteArrayInputStream stream) throws Exception {
         stream.reset();
 
         Document document = new Document(stream);

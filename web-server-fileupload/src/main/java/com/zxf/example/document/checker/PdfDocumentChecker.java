@@ -1,19 +1,32 @@
 package com.zxf.example.document.checker;
 
+import com.aspose.words.FileFormatInfo;
+import com.aspose.words.FileFormatUtil;
 import com.itextpdf.text.pdf.PdfArray;
 import com.itextpdf.text.pdf.PdfDictionary;
 import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfReader;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
-import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
+@Component
 public class PdfDocumentChecker implements DocumentChecker {
+
+    private static final List<String> ALLOWED_FORMATS = Arrays.asList(".pdf");
+
+    public PdfDocumentChecker() {
+        DocumentChecker.register("pdf", this);
+    }
+
     @Override
-    public boolean isSafe(BufferedInputStream inputStream, String fileName) {
+    public boolean isSafe(ByteArrayInputStream inputStream, String fileName, FileFormatInfo fileFormatInfo) {
         try {
-            if (!isAllowedFormat(inputStream)) {
+            if (!isAllowedFormat(fileFormatInfo)) {
                 return false;
             }
 
@@ -24,11 +37,12 @@ public class PdfDocumentChecker implements DocumentChecker {
         }
     }
 
-    private Boolean isAllowedFormat(BufferedInputStream stream) throws Exception {
-        return true;
+    private Boolean isAllowedFormat(FileFormatInfo fileFormatInfo) throws Exception {
+        String formatExtension = FileFormatUtil.loadFormatToExtension(fileFormatInfo.getLoadFormat());
+        return ALLOWED_FORMATS.contains(formatExtension);
     }
 
-    private Boolean hasSafeContent(BufferedInputStream stream) throws Exception {
+    private Boolean hasSafeContent(ByteArrayInputStream stream) throws Exception {
         stream.reset();
 
         PdfReader pdfReader = new PdfReader(stream);
