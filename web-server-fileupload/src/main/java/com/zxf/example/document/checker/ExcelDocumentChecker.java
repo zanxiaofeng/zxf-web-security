@@ -16,14 +16,14 @@ import java.util.List;
 @Slf4j
 @Component
 public class ExcelDocumentChecker implements DocumentChecker {
-    private static final List<String> ALLOWED_FORMATS = Arrays.asList(".xls", ".xlsx", ".csv");
+    private static final List<String> ALLOWED_FORMATS = Arrays.asList(".xls", ".xlsx");
 
     public ExcelDocumentChecker() {
-        DocumentChecker.register("excel", this);
+        DocumentChecker.register(ExcelDocumentChecker.class, this);
     }
 
     @Override
-    public boolean isSafe(ByteArrayInputStream inputStream, String fileName, FileFormatInfo fileFormatInfo) {
+    public boolean isSafe(ByteArrayInputStream inputStream, FileFormatInfo fileFormatInfo) {
         try {
             if (!isAllowedFormat(fileFormatInfo)) {
                 return false;

@@ -1,6 +1,7 @@
 package com.zxf.example.document.checker;
 
-import com.aspose.words.*;
+import com.aspose.words.FileFormatInfo;
+import com.aspose.words.FileFormatUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -8,14 +9,14 @@ import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.List;
 
-
 @Slf4j
 @Component
-public class WordDocumentChecker implements DocumentChecker {
-    private static final List<String> ALLOWED_FORMATS = Arrays.asList(".doc", ".docx", ".dot");
+public class CsvDocumentChecker implements DocumentChecker {
 
-    public WordDocumentChecker() {
-        DocumentChecker.register(WordDocumentChecker.class, this);
+    private static final List<String> ALLOWED_FORMATS = Arrays.asList(".txt");
+
+    public CsvDocumentChecker() {
+        DocumentChecker.register(CsvDocumentChecker.class, this);
     }
 
     @Override
@@ -27,7 +28,7 @@ public class WordDocumentChecker implements DocumentChecker {
 
             return hasSafeContent(inputStream);
         } catch (Exception ex) {
-            log.error("Exception during World file analysis.", ex);
+            log.error("Exception during csv file analysis.", ex);
             return false;
         }
     }
@@ -38,20 +39,6 @@ public class WordDocumentChecker implements DocumentChecker {
     }
 
     private Boolean hasSafeContent(ByteArrayInputStream stream) throws Exception {
-        stream.reset();
-
-        Document document = new Document(stream);
-        if (document.hasMacros()) {
-            return false;
-        }
-
-        NodeCollection shapes = document.getChildNodes(NodeType.SHAPE, true);
-        for (int i = 0; i < shapes.getCount(); i++) {
-            if (((Shape) shapes.get(i)).getOleFormat() != null) {
-                return false;
-            }
-        }
-
-        return true;
+        return false;
     }
 }

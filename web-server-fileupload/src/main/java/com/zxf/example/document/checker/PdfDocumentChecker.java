@@ -20,11 +20,11 @@ public class PdfDocumentChecker implements DocumentChecker {
     private static final List<String> ALLOWED_FORMATS = Arrays.asList(".pdf");
 
     public PdfDocumentChecker() {
-        DocumentChecker.register("pdf", this);
+        DocumentChecker.register(PdfDocumentChecker.class, this);
     }
 
     @Override
-    public boolean isSafe(ByteArrayInputStream inputStream, String fileName, FileFormatInfo fileFormatInfo) {
+    public boolean isSafe(ByteArrayInputStream inputStream, FileFormatInfo fileFormatInfo) {
         try {
             if (!isAllowedFormat(fileFormatInfo)) {
                 return false;

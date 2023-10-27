@@ -20,11 +20,11 @@ public class PowerpointDocumentChecker implements DocumentChecker {
     private static final List<String> ALLOWED_FORMATS = Arrays.asList(".ppt", ".pptx");
 
     public PowerpointDocumentChecker() {
-        DocumentChecker.register("ppt", this);
+        DocumentChecker.register(PowerpointDocumentChecker.class, this);
     }
 
     @Override
-    public boolean isSafe(ByteArrayInputStream inputStream, String fileName, FileFormatInfo fileFormatInfo) {
+    public boolean isSafe(ByteArrayInputStream inputStream, FileFormatInfo fileFormatInfo) {
         try {
             if (!isAllowedFormat(fileFormatInfo)) {
                 return false;
