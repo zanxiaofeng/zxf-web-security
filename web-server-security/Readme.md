@@ -44,3 +44,8 @@ curl --location --request POST 'http://localhost:8084/xml//DocumentBuilder/secur
   <!ELEMENT foo ANY >
   <!ENTITY xxe SYSTEM "file:////etc/passwd" >]>
 <foo>&xxe;</foo>'
+
+# Security Header
+- https://owasp.org/www-project-secure-headers/ci/headers_add.json
+- https://owasp.org/www-project-secure-headers/ci/headers_remove.json
+- curl -vvv http://localhost:8084
