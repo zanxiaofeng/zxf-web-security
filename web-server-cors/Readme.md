@@ -29,11 +29,33 @@
 - 预检OPTIONS 是 HTTP/1.1 协议中定义的方法，用以从服务器获取更多信息, 使用Access-Control-Request-Method, Access-Control-Request-Headers可以获取url指定服务端资源CORS访问控制信息（Access-Control-Allow-Origin, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Access-Control-Max-Age），并由浏览器对随后的真实请求实施访问控制。
 
 # Core classes
+- javax.servlet.FilterChain[interface]
+- org.apache.catalina.core.ApplicationFilterChain
+- javax.servlet.Filter[interface]
+- org.springframework.web.filter.GenericFilterBean[abstract]
+- *org.springframework.security.web.access.ExceptionTranslationFilter
 - org.springframework.web.filter.CorsFilter(好像没有用到)
 - org.springframework.web.servlet.handler.AbstractHandlerMapping.CorsInterceptor
 - org.springframework.web.cors.CorsProcessor
 - org.springframework.web.cors.DefaultCorsProcessor
-- org.springframework.security.web.access.ExceptionTranslationFilter
+- *org.springframework.security.web.FilterChainProxy(HttpFirewall=StrictHttpFirewall)
+- org.springframework.security.web.firewall.HttpFirewall
+- org.springframework.security.web.firewall.StrictHttpFirewall
+- org.springframework.security.web.firewall.DefaultHttpFirewall
+- org.springframework.security.web.SecurityFilterChain[interface]
+- org.springframework.security.web.DefaultSecurityFilterChain
+
+# Filter list
+## org.apache.catalina.core.ApplicationFilterChain
+- ApplicationFilterConfig[name=characterEncodingFilter, filterClass=org.springframework.boot.web.servlet.filter.OrderedCharacterEncodingFilter]
+- ApplicationFilterConfig[name=formContentFilter, filterClass=org.springframework.boot.web.servlet.filter.OrderedFormContentFilter]
+- ApplicationFilterConfig[name=requestContextFilter, filterClass=org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter]
+- ApplicationFilterConfig[name=springSecurityFilterChain, filterClass=org.springframework.boot.web.servlet.DelegatingFilterProxyRegistrationBean$1](delegate=DebugFilter)
+- ApplicationFilterConfig[name=Tomcat WebSocket (JSR356) Filter, filterClass=org.apache.tomcat.websocket.server.WsFilter]
+### springSecurityFilterChain - org.springframework.web.filter.DelegatingFilterProxy.DelegatingFilterProxy
+- delegate=org.springframework.security.web.debug.DebugFilter(filterChainProxy=FilterChainProxy)
+### org.springframework.security.web.debug.DebugFilter
+- filterChainProxy=FilterChainProxy[Filter Chains: [DefaultSecurityFilterChain [RequestMatcher=any request, Filters=[org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@93b31a8, org.springframework.security.web.context.SecurityContextPersistenceFilter@4d6ee47, org.springframework.security.web.header.HeaderWriterFilter@6d2dc9d2, org.springframework.security.web.authentication.logout.LogoutFilter@25da615a, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@c6da8bb, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3874b815, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7e8fd407, org.springframework.security.web.session.SessionManagementFilter@36361ddb, org.springframework.security.web.access.ExceptionTranslationFilter@56681eaf, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@5ae95707]]]]
 
 # 服务器端如何判断一个请求是否为跨域请求
 - 请求带有Origin Header
