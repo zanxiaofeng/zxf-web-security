@@ -11,6 +11,7 @@
 
 # Key classes for multipart support
 - javax.servlet.MultipartConfigElement
+- javax.servlet.annotation.MultipartConfig
 - org.springframework.web.multipart.MultipartFile
 - org.springframework.web.multipart.MultipartResolver
 - org.springframework.web.multipart.MultipartRequest
