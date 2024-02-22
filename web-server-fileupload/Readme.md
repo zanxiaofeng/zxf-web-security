@@ -15,11 +15,15 @@
 - org.springframework.web.multipart.MultipartFile
 - org.springframework.web.multipart.MultipartResolver
 - org.springframework.web.multipart.MultipartRequest
+- org.springframework.web.multipart.MultipartHttpServletRequest
 - org.springframework.web.multipart.MultipartFileResource
 - org.springframework.web.multipart.MultipartException
 - org.springframework.web.multipart.MaxUploadSizeExceededException
 - org.springframework.web.multipart.support.MultipartFilter
 - org.springframework.web.multipart.support.StandardServletMultipartResolver
+- org.springframework.web.multipart.support.AbstractMultipartHttpServletRequest
+- org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
+- org.springframework.web.multipart.support.StandardMultipartHttpServletRequest
 - org.springframework.web.multipart.commons.CommonsMultipartResolver
 - org.springframework.boot.autoconfigure.web.servlet.MultipartProperties
 - org.springframework.boot.autoconfigure.web.servlet.MultipartAutoConfiguration
