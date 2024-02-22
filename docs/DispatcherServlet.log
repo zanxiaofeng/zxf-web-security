@@ -1,0 +1,16 @@
+2024-02-22 09:21:21.918  INFO 74402 --- [           main] com.zxf.example.MyApplication            : Started MyApplication in 2.122 seconds (JVM running for 2.521)
+2024-02-22 09:24:10.902  INFO 74402 --- [nio-8085-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-02-22 09:24:10.902  INFO 74402 --- [nio-8085-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-02-22 09:24:10.902 TRACE 74402 --- [nio-8085-exec-2] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.multipart.support.StandardServletMultipartResolver@30dbf549
+2024-02-22 09:24:10.902 TRACE 74402 --- [nio-8085-exec-2] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver@75e367f
+2024-02-22 09:24:10.902 TRACE 74402 --- [nio-8085-exec-2] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.theme.FixedThemeResolver@1f7160a3
+2024-02-22 09:24:10.903 TRACE 74402 --- [nio-8085-exec-2] o.s.web.servlet.DispatcherServlet        : Detected DefaultRequestToViewNameTranslator
+2024-02-22 09:24:10.903 TRACE 74402 --- [nio-8085-exec-2] o.s.web.servlet.DispatcherServlet        : Detected SessionFlashMapManager
+2024-02-22 09:24:10.903 DEBUG 74402 --- [nio-8085-exec-2] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2024-02-22 09:24:10.903  INFO 74402 --- [nio-8085-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2024-02-22 09:24:10.911 TRACE 74402 --- [nio-8085-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/fileUploader", parameters={}, headers={masked} in DispatcherServlet 'dispatcherServlet'
+2024-02-22 09:24:10.979 TRACE 74402 --- [nio-8085-exec-2] o.s.web.servlet.DispatcherServlet        : Rendering view [org.springframework.web.servlet.view.freemarker.FreeMarkerView: name 'file_uploader_view'; URL [file_uploader_view.ftlh]]
+2024-02-22 09:24:10.992 DEBUG 74402 --- [nio-8085-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK, headers={masked}
+2024-02-22 09:24:43.475 TRACE 74402 --- [nio-8085-exec-3] o.s.web.servlet.DispatcherServlet        : POST "/uploadFile", parameters={multipart}, headers={masked} in DispatcherServlet 'dispatcherServlet'
+2024-02-22 09:24:44.175 TRACE 74402 --- [nio-8085-exec-3] o.s.web.servlet.DispatcherServlet        : Rendering view [org.springframework.web.servlet.view.freemarker.FreeMarkerView: name 'file_uploaded_view'; URL [file_uploaded_view.ftlh]]
+2024-02-22 09:24:44.188 DEBUG 74402 --- [nio-8085-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK, headers={masked}
