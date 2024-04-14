@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLConnection;
+import java.nio.file.LinkOption;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -75,6 +77,13 @@ public class FileController {
         System.out.println("Path::toString, " + myPath);
         System.out.println("Path::startsWith, " + myPath.startsWith(baseFolder));
         System.out.println("Path::toString, " + myPath.normalize());
+        try {
+            System.out.println("Path::toRealPath, " + myPath.toRealPath());
+        } catch (NoSuchFileException noSuchFileException) {
+            noSuchFileException.printStackTrace();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
         System.out.println("Path::toString, " + myPath.toAbsolutePath());
         System.out.println("File::exists, " + myFile.exists());
         System.out.println("File::getAbsolutePath, " + myFile.getAbsolutePath());
