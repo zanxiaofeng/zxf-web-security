@@ -1,0 +1,8 @@
+Path::toString, /var/www/../../usr/bin/vim
+Path::startsWith, true
+Path::toString, /usr/bin/vim
+Path::toString, /var/www/../../usr/bin/vim
+File::exists, true
+File::getAbsolutePath, /var/www/../../usr/bin/vim
+File::getCanonicalPath, /usr/bin/vim.basic
+Path::toRealPath, /usr/bin/vim.basic

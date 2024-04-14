@@ -21,7 +21,7 @@ public class FileController {
     private static final String FOLDER = "./src/main/resources/static/my";
 
     @GetMapping("/security")
-    public ResponseEntity<FileSystemResource> security(@RequestParam String fileName) {
+    public ResponseEntity<FileSystemResource> security(@RequestParam String fileName) throws IOException {
         if (isSecurityAccess(FOLDER, fileName)) {
             File file = Paths.get(FOLDER).resolve(fileName).toFile();
             String mimeType = URLConnection.guessContentTypeFromName(file.getName());
@@ -32,7 +32,7 @@ public class FileController {
     }
 
     @GetMapping("/security/**")
-    public ResponseEntity<FileSystemResource> securityByPath(HttpServletRequest request) {
+    public ResponseEntity<FileSystemResource> securityByPath(HttpServletRequest request) throws IOException {
         String fileName = request.getRequestURI().substring(15);
         if (isSecurityAccess(FOLDER, fileName)) {
             File file = Paths.get(FOLDER).resolve(fileName).toFile();
@@ -59,34 +59,45 @@ public class FileController {
         return ResponseEntity.ok().contentType(MediaType.valueOf(mimeType)).body(new FileSystemResource(file));
     }
 
-    public boolean isSecurityAccess(String folder, String fileName) {
+    public boolean isSecurityAccess(String folder, String fileName) throws IOException {
         Path folderPath = Paths.get(folder).normalize();
         System.out.println("Folder: " + folderPath.toAbsolutePath());
         Path filePath = folderPath.resolve(fileName).normalize();
         System.out.println("File: " + filePath.toAbsolutePath());
-        //如果Path中有符号链接，并不能解析后比较（解析符号链接需要真实执行文件系统操作）
-        return filePath.toAbsolutePath().startsWith(folderPath.toAbsolutePath());
+        //toAbsolutePath并不解析Path中的符号链接(解析符号链接需要执行文件系统操作)
+        //return filePath.toAbsolutePath().startsWith(folderPath.toAbsolutePath());
+        return filePath.toRealPath().startsWith(folderPath.toRealPath());
     }
 
-    public static void main(String[] args) throws IOException {
-        String baseFolder = "var/www/images/";
-        Path myPath = Paths.get(baseFolder).resolve("../../../etc/hosts");
-        //toFile并不执行文件系统操作
+    public static void main(String[] args) {
+        // /usr/bin/vim -> /etc/alternatives/vim -> /usr/bin/vim.basic
+
+        String baseFolder = "/var/www/";
+        Path myPath = Paths.get(baseFolder).resolve("../../usr/bin/vim");
         File myFile = myPath.toFile();
 
         System.out.println("Path::toString, " + myPath);
         System.out.println("Path::startsWith, " + myPath.startsWith(baseFolder));
-        System.out.println("Path::toString, " + myPath.normalize());
+        System.out.println("Path::normalize, " + myPath.normalize());
+        System.out.println("Path::toAbsolutePath, " + myPath.toAbsolutePath());
         try {
+            // This method will resolve symbol link
             System.out.println("Path::toRealPath, " + myPath.toRealPath());
         } catch (NoSuchFileException noSuchFileException) {
             noSuchFileException.printStackTrace();
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
-        System.out.println("Path::toString, " + myPath.toAbsolutePath());
+
         System.out.println("File::exists, " + myFile.exists());
         System.out.println("File::getAbsolutePath, " + myFile.getAbsolutePath());
-        System.out.println("File::getCanonicalPath, " + myFile.getCanonicalPath());
+        try {
+            // This method will resolve symbol link
+            System.out.println("File::getCanonicalPath, " + myFile.getCanonicalPath());
+        } catch (NoSuchFileException noSuchFileException) {
+            noSuchFileException.printStackTrace();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
     }
 }
