@@ -79,6 +79,8 @@ public class FileController {
         System.out.println("Path::toString, " + myPath);
         System.out.println("Path::startsWith, " + myPath.startsWith(baseFolder));
         System.out.println("Path::normalize, " + myPath.normalize());
+        System.out.println("Path::normalize.getParent, " + myPath.normalize().getParent());
+        System.out.println("Path::normalize.getParent, " + myPath.normalize().getParent().equals(Paths.get("/usr/bin")));
         System.out.println("Path::toAbsolutePath, " + myPath.toAbsolutePath());
         try {
             // This method will resolve symbol link
