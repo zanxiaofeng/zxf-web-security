@@ -69,10 +69,12 @@ public class FileController {
         System.out.println("File: " + filePath.toAbsolutePath());
         //toAbsolutePath并不解析Path中的符号链接(解析符号链接需要执行文件系统操作)
         //return filePath.toAbsolutePath().startsWith(folderPath.toAbsolutePath());
+        //This is Path::startsWith not String::startWith
         return filePath.toRealPath().startsWith(folderPath.toRealPath());
     }
 
     public boolean isSecurityAccess2(Path folder, String fileName) throws IOException {
+        // File::getCanonicalFile will normalize the file path and resolve the symbol link.
         File canonicalFile = folder.resolve(fileName).toFile().getCanonicalFile();
         List<String> ALLOWED_FORMATS = Arrays.asList("jpg", "pdf");
         if (!FilenameUtils.isExtension(canonicalFile.getName(), ALLOWED_FORMATS)) {
