@@ -1,5 +1,6 @@
 package com.zxf.example.controllers;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +15,18 @@ import java.nio.file.LinkOption;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 
 @Controller
 @RequestMapping("/file")
 public class FileController {
-    private static final String FOLDER = "./src/main/resources/static/my";
+    private static final Path FOLDER = Paths.get("./src/main/resources/static/my");
 
     @GetMapping("/security")
     public ResponseEntity<FileSystemResource> security(@RequestParam String fileName) throws IOException {
         if (isSecurityAccess(FOLDER, fileName)) {
-            File file = Paths.get(FOLDER).resolve(fileName).toFile();
+            File file = FOLDER.resolve(fileName).toFile();
             String mimeType = URLConnection.guessContentTypeFromName(file.getName());
             System.out.println("******" + mimeType);
             return ResponseEntity.ok().contentType(MediaType.valueOf(mimeType)).body(new FileSystemResource(file));
@@ -35,7 +38,7 @@ public class FileController {
     public ResponseEntity<FileSystemResource> securityByPath(HttpServletRequest request) throws IOException {
         String fileName = request.getRequestURI().substring(15);
         if (isSecurityAccess(FOLDER, fileName)) {
-            File file = Paths.get(FOLDER).resolve(fileName).toFile();
+            File file = FOLDER.resolve(fileName).toFile();
             String mimeType = URLConnection.guessContentTypeFromName(file.getName());
             System.out.println("******" + mimeType);
             return ResponseEntity.ok().contentType(MediaType.valueOf(mimeType)).body(new FileSystemResource(file));
@@ -45,7 +48,7 @@ public class FileController {
 
     @GetMapping("/un-security")
     public ResponseEntity<FileSystemResource> unSecurity(@RequestParam String fileName) {
-        File file = Paths.get(FOLDER).resolve(fileName).toFile();
+        File file = FOLDER.resolve(fileName).toFile();
         String mimeType = URLConnection.guessContentTypeFromName(file.getName());
         System.out.println("******" + mimeType);
         return ResponseEntity.ok().contentType(MediaType.valueOf(mimeType)).body(new FileSystemResource(file));
@@ -53,20 +56,31 @@ public class FileController {
 
     @GetMapping("/un-security/{fileName}")
     public ResponseEntity<FileSystemResource> unSecurityByPath(@PathVariable String fileName) {
-        File file = Paths.get(FOLDER).resolve(fileName).toFile();
+        File file = FOLDER.resolve(fileName).toFile();
         String mimeType = URLConnection.guessContentTypeFromName(file.getName());
         System.out.println("******" + mimeType);
         return ResponseEntity.ok().contentType(MediaType.valueOf(mimeType)).body(new FileSystemResource(file));
     }
 
-    public boolean isSecurityAccess(String folder, String fileName) throws IOException {
-        Path folderPath = Paths.get(folder).normalize();
+    public boolean isSecurityAccess(Path folder, String fileName) throws IOException {
+        Path folderPath = folder.normalize();
         System.out.println("Folder: " + folderPath.toAbsolutePath());
         Path filePath = folderPath.resolve(fileName).normalize();
         System.out.println("File: " + filePath.toAbsolutePath());
         //toAbsolutePath并不解析Path中的符号链接(解析符号链接需要执行文件系统操作)
         //return filePath.toAbsolutePath().startsWith(folderPath.toAbsolutePath());
         return filePath.toRealPath().startsWith(folderPath.toRealPath());
+    }
+
+    public boolean isSecurityAccess2(Path folder, String fileName) throws IOException {
+        File canonicalFile = folder.resolve(fileName).toFile().getCanonicalFile();
+        List<String> ALLOWED_FORMATS = Arrays.asList("jpg", "pdf");
+        if (!FilenameUtils.isExtension(canonicalFile.getName(), ALLOWED_FORMATS)) {
+            return false;
+        }
+
+        File canonicalFolder = folder.toFile().getCanonicalFile();
+        return canonicalFile.getParentFile().equals(canonicalFolder);
     }
 
     public static void main(String[] args) {
