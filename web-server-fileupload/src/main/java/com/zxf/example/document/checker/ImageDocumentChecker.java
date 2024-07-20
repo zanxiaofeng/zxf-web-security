@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.List;
@@ -38,6 +39,11 @@ public class ImageDocumentChecker implements DocumentChecker {
 
     private Boolean hasSafeContent(ByteArrayInputStream stream) throws Exception {
         stream.reset();
-        return ImageIO.read(stream) != null;
+        BufferedImage image = ImageIO.read(stream);
+        if (image == null) {
+            log.error("Content can not be read as an image.");
+            return false;
+        }
+        return true;
     }
 }
