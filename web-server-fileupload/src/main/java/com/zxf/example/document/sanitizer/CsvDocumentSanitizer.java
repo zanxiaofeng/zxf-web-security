@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 @Component
 public class CsvDocumentSanitizer implements DocumentSanitizer {
-    private List<Character> BEGIN_CHARACTERS = Arrays.asList('=', '+', '-', '@', Character.valueOf((char) 0x09), Character.valueOf((char) 0x0d));
+    private final List<Character> BEGIN_CHARACTERS = Arrays.asList('=', '+', '-', '@', Character.valueOf((char) 0x09), Character.valueOf((char) 0x0d));
 
     public CsvDocumentSanitizer() {
         DocumentSanitizer.register(CsvDocumentSanitizer.class, this);
@@ -41,6 +41,6 @@ public class CsvDocumentSanitizer implements DocumentSanitizer {
     }
 
     private boolean needSanitize(String cellValue) {
-        return cellValue.length() > 0 && BEGIN_CHARACTERS.contains(cellValue.charAt(0));
+        return !cellValue.isEmpty() && BEGIN_CHARACTERS.contains(cellValue.charAt(0));
     }
 }

@@ -27,9 +27,9 @@ public class FileUploadController {
                 throw new RuntimeException("This is not a supported file!");
             }
 
-            if (!documentType.isSafe(byteArrayInputStream)) {
+            if (!documentType.isSafe(byteArrayInputStream, file.getOriginalFilename())) {
                 if (!documentType.canSanitize()) {
-                    throw new RuntimeException("Unsafe word file!");
+                    throw new RuntimeException("Unsafe file!");
                 }
 
                 byte[] result = documentType.sanitize(byteArrayInputStream);

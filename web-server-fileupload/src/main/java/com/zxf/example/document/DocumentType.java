@@ -18,19 +18,17 @@ public enum DocumentType {
     Pdf("pdf", PdfDocumentChecker.class, null),
     Excel("xls,xlsx", ExcelDocumentChecker.class, null),
     Powerpoint("ppt", PowerpointDocumentChecker.class, null),
-    Csv("csv", CsvDocumentChecker.class, CsvDocumentSanitizer.class);
+    Csv("csv", CsvDocumentChecker.class, CsvDocumentSanitizer.class),
+    Image("jpg,png,tiff", ImageDocumentChecker.class, null);
 
-    private String fileExtensions;
-    private Class documentChecker;
-    private Class documentSanitizer;
+    private final String fileExtensions;
+    private final Class<? extends DocumentChecker> documentChecker;
+    private final Class<? extends DocumentSanitizer> documentSanitizer;
 
-    public boolean isSafe(ByteArrayInputStream inputStream) throws Exception {
-        FileFormatInfo fileFormatInfo = FileFormatUtil.detectFileFormat(inputStream);
+    public boolean isSafe(ByteArrayInputStream inputStream, String fileName) throws Exception {
         DocumentChecker myDocumentChecker = DocumentChecker.getDocumentChecker(this.documentChecker);
-        if (myDocumentChecker.isSafe(inputStream, fileFormatInfo)) {
-            return true;
-        }
-        return false;
+        String fileExtension = FilenameUtils.getExtension(fileName);
+        return myDocumentChecker.isSafe(inputStream, fileExtension);
     }
 
     public boolean canSanitize() {

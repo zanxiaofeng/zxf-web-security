@@ -19,8 +19,9 @@ public class WordDocumentChecker implements DocumentChecker {
     }
 
     @Override
-    public boolean isSafe(ByteArrayInputStream inputStream, FileFormatInfo fileFormatInfo) {
+    public boolean isSafe(ByteArrayInputStream inputStream, String fileExtension) {
         try {
+            FileFormatInfo fileFormatInfo = FileFormatUtil.detectFileFormat(inputStream);
             if (!isAllowedFormat(fileFormatInfo)) {
                 return false;
             }

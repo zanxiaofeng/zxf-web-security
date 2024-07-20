@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public interface DocumentChecker {
-    boolean isSafe(ByteArrayInputStream inputStream, FileFormatInfo fileFormatInfo);
+    boolean isSafe(ByteArrayInputStream inputStream, String fileExtension);
 
     Map<Class<? extends DocumentChecker>, DocumentChecker> documentCheckers = new HashMap<>();
 
