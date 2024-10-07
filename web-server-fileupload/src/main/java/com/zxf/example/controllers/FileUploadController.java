@@ -57,4 +57,13 @@ public class FileUploadController {
         modelAndView.addObject("email", email);
         return modelAndView;
     }
+
+    @PostMapping("/uploadFileWithAdditionalData2")
+    public ModelAndView exchange(@RequestPart MultipartFile file, @RequestPart String name, @RequestPart String email) {
+        ModelAndView modelAndView = new ModelAndView("file_uploaded_additional_view");
+        modelAndView.addObject("file", file);
+        modelAndView.addObject("name", name);
+        modelAndView.addObject("email", email);
+        return modelAndView;
+    }
 }
