@@ -7,7 +7,6 @@ import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data

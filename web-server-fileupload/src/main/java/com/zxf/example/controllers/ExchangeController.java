@@ -22,6 +22,7 @@ public class ExchangeController {
     @Autowired
     private RestTemplate restTemplate;
 
+    //Validated do not take effective
     @PostMapping("/exchange1")
     public String exchange1(@Validated @ModelAttribute ExchangeRequest request) throws IOException {
         log.info("exchange1, request={}", request);
