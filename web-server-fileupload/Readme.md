@@ -27,7 +27,9 @@
 - org.springframework.web.multipart.support.AbstractMultipartHttpServletRequest
 - org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 - org.springframework.web.multipart.support.StandardMultipartHttpServletRequest
+- org.springframework.web.multipart.support.StandardMultipartHttpServletRequest.StandardMultipartFile
 - org.springframework.web.multipart.commons.CommonsMultipartResolver
+- org.springframework.web.multipart.commons.CommonsMultipartFile
 - org.springframework.boot.autoconfigure.web.servlet.MultipartProperties
 - org.springframework.boot.autoconfigure.web.servlet.MultipartAutoConfiguration
 
