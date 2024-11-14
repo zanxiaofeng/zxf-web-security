@@ -21,6 +21,7 @@ public class ExchangeRequest {
     @AllArgsConstructor
     public static class Request {
         @NotBlank
+        @ToString.Exclude
         private String to;
         @NotBlank
         private String subject;

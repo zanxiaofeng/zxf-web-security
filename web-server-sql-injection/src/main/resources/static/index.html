@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <title>Web server CORS</title>
+    <script>
+        function ajax(method, url) {
+            return new Promise(function(resolve, reject) {
+                var request = new XMLHttpRequest();
+                request.open(method, url, true);
+                request.onload = function(event) {
+                    console.log(event);
+                };
+                request.onerror = function(event) {
+                    console.log(event);
+                };
+                request.send();
+            });
+        }
+    </script>
+</head>
+<body>
+<div>
+    <h1>Test href link</h1>
+    <a target="_blank" href="http://localhost:8082/my/get?account=12345">My</a>
+    <br>
+    <a target="_blank" href="http://localhost:8082/cors/get?account=54321">Cors</a>
+</div>
+
+<div>
+    <h1>Test src read(GET)</h1>
+    My - should Failed:
+    <img src="http://localhost:8082/my/img"/>
+    <br>
+    Cors:
+    <img src="http://localhost:8082/cors/img"/>
+</div>
+
+<div>
+    <h1>Test form write(POST)</h1>
+    <form target="_self" method="POST" action="http://localhost:8082/my/post">
+        <input type="hidden" name="account" value="3456">
+        <input type="submit" value="My - should Failed">
+    </form>
+    <form target="_self" method="POST" action="http://localhost:8082/cors/post">
+        <input type="hidden" name="account" value="6543">
+        <input type="submit" value="Cors">
+    </form>
+</div>
+
+<div>
+    <h1>Test ajax read(GET)</h1>
+    <input type="button" value="My - should Failed" onclick="ajax('GET', 'http://localhost:8082/my/get?account=12345')">
+    <br/>
+    <input type="button" value="Cors" onclick="ajax('GET', 'http://localhost:8082/cors/get?account=54321')">
+</div>
+
+<div>
+    <h1>Test ajax write(PUT)</h1>
+
+</div>
+</body>
+</html>

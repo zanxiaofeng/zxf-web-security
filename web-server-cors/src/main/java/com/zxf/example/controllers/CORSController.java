@@ -11,7 +11,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping("/cors")
-@CrossOrigin(origins = {"http://localhost:8081"}, originPatterns = {"http://*.zxf.com"}, methods = {GET, POST, PUT}, allowCredentials = "true", maxAge = 3600)
+@CrossOrigin(origins = {"http://localhost:8081"}, originPatterns = {"http://*.zxf.com","http://*.zxf.com:[*]"}, methods = {GET, POST, PUT}, allowCredentials = "true", maxAge = 3600)
 public class CORSController {
     @GetMapping("/get")
     public Map<String, String> get(@RequestParam String account) {
