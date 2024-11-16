@@ -1,6 +1,6 @@
 package com.zxf.example.domain;
 
-public class User {
+public class Product {
     private String id;
     private String name;
     private String title;

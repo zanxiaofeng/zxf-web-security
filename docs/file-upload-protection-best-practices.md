@@ -1,7 +1,7 @@
 File Upload Protection – 10 Best Practices for Preventing Cyber Attacks
 =======================================================================
 
-File uploads are essential for user productivity and many business services and applications. For instance, file uploads are an important function for content management systems, healthcare portals, insurance sites, and messaging applications. As organizations move to remote and distanced workspaces it becomes increasingly critical to implement measures to ensure the security of file uploads, since leaving file uploads unrestricted creates an attack vector for malicious actors.
+File uploads are essential for customer productivity and many business services and applications. For instance, file uploads are an important function for content management systems, healthcare portals, insurance sites, and messaging applications. As organizations move to remote and distanced workspaces it becomes increasingly critical to implement measures to ensure the security of file uploads, since leaving file uploads unrestricted creates an attack vector for malicious actors.
 
 What are the File Upload Risks?
 -------------------------------
@@ -37,7 +37,7 @@ To avoid these types of file upload attacks, we recommend the following ten best
 
 **4\. Remove possible embedded threats.** Files such as Microsoft Office, PDF and image files can have embedded threats in hidden scripts and macros that are not always detected by anti-malware engines. To remove risk and make sure that files contain no hidden threats, it is best practice to remove any possible embedded objects by using a methodology called [content disarm and reconstruction (CDR)](https://www.opswat.com/technologies/data-sanitization).
 
-**5\. Authenticate users.** To increase security, it is good practice to require users to authenticate themselves before uploading a file. However, that doesn’t guarantee the user’s machine itself wasn’t compromised.
+**5\. Authenticate users.** To increase security, it is good practice to require users to authenticate themselves before uploading a file. However, that doesn’t guarantee the customer’s machine itself wasn’t compromised.
 
 **6\. Set a maximum name length and maximum file size.** Make sure to set a maximum name length (restrict allowed characters if possible) and file size in order to prevent a potential service outage.
 

@@ -1,7 +1,9 @@
 package com.zxf.example.controllers;
 
-import com.zxf.example.domain.User;
-import com.zxf.example.mapper.UserRowMapper;
+import com.zxf.example.domain.Customer;
+import com.zxf.example.domain.Product;
+import com.zxf.example.mapper.ProductRowMapper;
+import com.zxf.example.mapper.CustomerRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,102 +27,113 @@ public class DefaultController {
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @GetMapping("/jdbc/security/single")
-    public User securityJdbcSingle(@RequestParam String id) throws SQLException {
+    public Customer securityJdbcSingle(@RequestParam String id) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
-            String query = "SELECT * FROM USER WHERE ID=?";
+            String query = "SELECT * FROM CUSTOMER WHERE ID=?";
             System.out.println("Query: " + query);
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (!resultSet.next()) {
-                return new User();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, id);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (!resultSet.next()) {
+                        return new Customer();
+                    }
+                    return new CustomerRowMapper().mapRow(resultSet, 0);
+                }
             }
-            return new UserRowMapper().mapRow(resultSet, 0);
         }
     }
 
     @GetMapping("/jdbc/un-security/single")
-    public User unSecurityJdbcSingle(@RequestParam String id) throws SQLException {
+    public Customer unSecurityJdbcSingle(@RequestParam String id) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
-            String query = String.format("SELECT * FROM USER WHERE ID='%s'", id);
+            String query = String.format("SELECT * FROM CUSTOMER WHERE ID='%s'", id);
             System.out.println("Query: " + query);
-            ResultSet resultSet = connection.createStatement().executeQuery(query);
 
-            if (!resultSet.next()) {
-                return new User();
+            try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
+                if (!resultSet.next()) {
+                    return new Customer();
+                }
+                return new CustomerRowMapper().mapRow(resultSet, 0);
             }
-            return new UserRowMapper().mapRow(resultSet, 0);
         }
     }
 
     @GetMapping("/jdbc/security/list")
-    public List<User> securityJdbcList(@RequestParam String title) throws SQLException {
+    public List<Customer> securityJdbcList(@RequestParam String title) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
-            String query = "SELECT * FROM USER WHERE TITLE=?";
+            String query = "SELECT * FROM CUSTOMER WHERE TITLE=?";
             System.out.println("Query: " + query);
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, title);
-            ResultSet resultSet = preparedStatement.executeQuery();
 
-            UserRowMapper userRowMapper = new UserRowMapper();
-            List<User> results = new ArrayList<>();
-            while (resultSet.next()) {
-                results.add(userRowMapper.mapRow(resultSet, 0));
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, title);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    CustomerRowMapper customerRowMapper = new CustomerRowMapper();
+                    List<Customer> results = new ArrayList<>();
+                    while (resultSet.next()) {
+                        results.add(customerRowMapper.mapRow(resultSet, 0));
+                    }
+                    return results;
+                }
             }
-            return results;
         }
     }
 
     @GetMapping("/jdbc/un-security/list")
-    public List<User> unSecurityJdbcList(@RequestParam String title) throws SQLException {
+    public List<Customer> unSecurityJdbcList(@RequestParam String title) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
-            String query = String.format("SELECT * FROM USER WHERE TITLE='%s'", title);
+            String query = String.format("SELECT * FROM CUSTOMER WHERE TITLE='%s';", title);
             System.out.println("Query: " + query);
-            ResultSet resultSet = connection.createStatement().executeQuery(query);
 
-            List<User> results = new ArrayList<>();
-            while (resultSet.next()) {
-                results.add(new UserRowMapper().mapRow(resultSet, 0));
+            try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
+                List<Customer> results = new ArrayList<>();
+                while (resultSet.next()) {
+                    results.add(new CustomerRowMapper().mapRow(resultSet, 0));
+                }
+                return results;
             }
-            return results;
         }
     }
 
     @GetMapping("/template/security/single")
-    public User securityTemplateSingle(@RequestParam String id) {
-        String query = "SELECT * FROM USER WHERE ID = ?";
+    public Customer securityTemplateSingle(@RequestParam String id) {
+        String query = "SELECT * FROM CUSTOMER WHERE ID = ?";
         System.out.println("Query: " + query);
         try {
-            return jdbcTemplate.queryForObject(query, new UserRowMapper(), id);
+            return jdbcTemplate.queryForObject(query, new CustomerRowMapper(), id);
         } catch (EmptyResultDataAccessException ex) {
-            return new User();
+            return new Customer();
         }
     }
 
     @GetMapping("/template/un-security/single")
-    public User unSecurityTemplateSingle(@RequestParam String id) {
-        String query = String.format("SELECT * FROM USER WHERE ID = '%s'", id);
+    public Customer unSecurityTemplateSingle(@RequestParam String id) {
+        String query = String.format("SELECT * FROM CUSTOMER WHERE ID = '%s'", id);
         System.out.println("Query: " + query);
         try {
-            return jdbcTemplate.queryForObject(query, new UserRowMapper());
+            return jdbcTemplate.queryForObject(query, new CustomerRowMapper());
         } catch (EmptyResultDataAccessException ex) {
-            return new User();
+            return new Customer();
         }
     }
 
     @GetMapping("/template/security/list")
-    public List<User> securityTemplateList(@RequestParam String title) {
-        String query = "SELECT * FROM USER WHERE TITLE = :title";
+    public List<Customer> securityTemplateList(@RequestParam String title) {
+        String query = "SELECT * FROM CUSTOMER WHERE TITLE = :title";
         System.out.println("Query: " + query);
         Map<String, Object> parameters = Collections.singletonMap("title", title);
-        return namedParameterJdbcTemplate.query(query, parameters, new UserRowMapper());
+        return namedParameterJdbcTemplate.query(query, parameters, new CustomerRowMapper());
     }
 
     @GetMapping("/template/un-security/list")
-    public List<User> unSecurityTemplateList(@RequestParam String title) {
-        String query = String.format("SELECT * FROM USER WHERE TITLE = '%s'", title);
+    public List<Customer> unSecurityTemplateList(@RequestParam String title) {
+        String query = String.format("SELECT * FROM CUSTOMER WHERE TITLE = '%s'", title);
         System.out.println("Query: " + query);
-        return namedParameterJdbcTemplate.query(query, new UserRowMapper());
+        return namedParameterJdbcTemplate.query(query, new CustomerRowMapper());
+    }
+
+    @GetMapping("/products")
+    public List<Product> products() {
+        return namedParameterJdbcTemplate.query("SELECT * FROM PRODUCT", new ProductRowMapper());
     }
 }
