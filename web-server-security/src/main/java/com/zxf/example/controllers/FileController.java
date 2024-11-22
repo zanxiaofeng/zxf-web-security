@@ -1,5 +1,6 @@
 package com.zxf.example.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
@@ -7,11 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLConnection;
-import java.nio.file.LinkOption;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;

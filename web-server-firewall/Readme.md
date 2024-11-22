@@ -17,3 +17,6 @@
 - org.springframework.security.web.firewall.StrictHttpFirewall.StrictFirewalledRequest
 ## Response flow
 - org.springframework.security.web.firewall.StrictHttpFirewall.getFirewalledResponse(HttpServletResponse response):HttpServletResponse
+
+# Testing
+- curl -vvvv http://localhost:8087/default/accounts/%2525?owner=davis%25
