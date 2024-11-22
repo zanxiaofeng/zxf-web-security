@@ -20,6 +20,7 @@
         <module>web-server-cors</module>
 		<module>web-server-csrf</module>
 		<module>web-server-security</module>
+		<module>web-server-firewall</module>
 		<module>web-server-fileupload</module>
 		<module>web-server-sql-injection</module>
     </modules>
