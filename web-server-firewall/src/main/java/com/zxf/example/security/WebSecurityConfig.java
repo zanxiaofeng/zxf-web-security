@@ -25,7 +25,6 @@ public class WebSecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         StrictHttpFirewall strictHttpFirewall = new StrictHttpFirewall();
         strictHttpFirewall.setAllowedHttpMethods(Arrays.asList("GET", "POST", "PUT"));
-        strictHttpFirewall.setAllowUrlEncodedPercent(true);
         // Override the httpFirewall in org.springframework.security.web.FilterChainProxy
         return (web) -> web.debug(true).httpFirewall(strictHttpFirewall);
     }
