@@ -6,7 +6,6 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.util.Assert;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,21 +17,13 @@ import java.util.function.Consumer;
 public class LoggingRequestInterceptor implements ClientHttpRequestInterceptor {
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-        if (log.isDebugEnabled()) {
-            logRequest(request, body, log::debug);
-        }
-        //BufferingClientHttpResponseWrapper response = new BufferingClientHttpResponseWrapper(execution.execute(request, body));
         try {
             ClientHttpResponse response = execution.execute(request, body);
-            Assert.isTrue(response.getClass().getName().equals("org.springframework.http.client.BufferingClientHttpResponseWrapper"), "Not BufferingClientHttpResponseWrapper");
+            boolean isError = !response.getStatusCode().is2xxSuccessful();
 
-            if (log.isDebugEnabled()) {
-                logResponse(response, log::debug);
-            }
-
-            if (!response.getStatusCode().is2xxSuccessful()) {
-                logRequest(request, body, log::error);
-                logResponse(response, log::error);
+            if (isError || log.isDebugEnabled()) {
+                logRequest(request, body, isError ? log::error : log::debug);
+                logResponse(response, isError ? log::error : log::debug);
             }
 
             return response;
@@ -54,7 +45,7 @@ public class LoggingRequestInterceptor implements ClientHttpRequestInterceptor {
 
     private void logResponse(ClientHttpResponse response, Consumer<String> logger) throws IOException {
         logger.accept("=================================================Response begin=================================================");
-        logger.accept("Status     : " + response.getStatusCode());
+        logger.accept("Status code     : " + response.getStatusCode());
         logger.accept("Headers         : " + response.getHeaders());
         logger.accept("Response Body   : " + toString(response));
         logger.accept("=================================================Response end=================================================");
