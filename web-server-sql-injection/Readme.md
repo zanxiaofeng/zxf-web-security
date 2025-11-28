@@ -28,6 +28,10 @@
 # How to execute multiple queries in a single statement in java
 - spring.datasource.url=jdbc:mysql://host/database?allowMultiQueries=true
 
+# How to prevent SQL injection in Mybatis
+- The parameter notation #{id,jdbcType=INTEGER} tells MyBatis to take the id property of a parameter object and use it as a JDBC prepared statement parameter.
+- Simply put, #{} is pre-compiled and is safe; ${} is not pre-compiled, it just takes the value of the variable, it is not safe, and there is SQL injection.
+
 # SQLMAP
 ## Check if there is sql injection
 - sqlmap -u http://localhost:8086/un-security/query/single?id=c-1
