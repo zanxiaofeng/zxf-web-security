@@ -34,8 +34,13 @@ public class TempFileCleanupConfig {
     /**
      * Cleanup temp multipart files created by CommonsMultipartFile (Apache Commons FileUpload).
      * <p>
-     * Used when Spring Boot uses CommonsMultipartResolver for handling file uploads.
-     * Temporary files are named with prefix: {@code upload_}
+     * <b>NOTE:</b> This method is kept for compatibility only. The current project uses
+     * Spring Boot 3.3.6 with Jakarta EE, which uses StandardMultipartFile by default.
+     * Commons FileUpload is not compatible with Spring Boot 3.x Jakarta namespace.
+     * </p>
+     * <p>
+     * This method would only be active if {@code commons-fileupload} dependency were added
+     * and explicitly configured. Temporary files are named with prefix: {@code upload_}
      * </p>
      * <p>
      * Runs every hour, starting 1 minute after application startup.
@@ -51,8 +56,11 @@ public class TempFileCleanupConfig {
     /**
      * Cleanup temp multipart files created by StandardMultipartFile (Servlet 3.0+).
      * <p>
-     * Used when Spring Boot uses the standard Servlet 3.0 multipart support
-     * (StandardServletMultipartResolver). This is the default in modern Spring Boot.
+     * <b>This is the active method for this project.</b>
+     * </p>
+     * <p>
+     * Spring Boot 3.3.6 uses the standard Servlet 3.0+ multipart support
+     * (StandardServletMultipartResolver) by default via {@code spring-boot-starter-web}.
      * Temporary files are named with prefix: {@code spring-}
      * </p>
      * <p>
