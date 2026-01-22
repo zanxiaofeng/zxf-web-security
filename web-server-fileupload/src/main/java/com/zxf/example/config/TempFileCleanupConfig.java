@@ -32,8 +32,16 @@ public class TempFileCleanupConfig {
     private String multipartLocation;
 
     /**
-     * Cleanup temp multipart files older than 1 hour.
-     * Runs every hour starting at application startup.
+     * Cleanup temp multipart files created by CommonsMultipartFile (Apache Commons FileUpload).
+     * <p>
+     * Used when Spring Boot uses CommonsMultipartResolver for handling file uploads.
+     * Temporary files are named with prefix: {@code upload_}
+     * </p>
+     * <p>
+     * Runs every hour, starting 1 minute after application startup.
+     * </p>
+     *
+     * @see org.springframework.web.multipart.commons.CommonsMultipartFile
      */
     @Scheduled(fixedRate = 3600000, initialDelay = 60000)
     public void cleanupTempMultipartFiles() {
@@ -41,7 +49,17 @@ public class TempFileCleanupConfig {
     }
 
     /**
-     * Cleanup Spring's multipart temp files (StandardMultipartFile naming pattern).
+     * Cleanup temp multipart files created by StandardMultipartFile (Servlet 3.0+).
+     * <p>
+     * Used when Spring Boot uses the standard Servlet 3.0 multipart support
+     * (StandardServletMultipartResolver). This is the default in modern Spring Boot.
+     * Temporary files are named with prefix: {@code spring-}
+     * </p>
+     * <p>
+     * Runs every hour, starting 2 minutes after application startup.
+     * </p>
+     *
+     * @see org.springframework.web.multipart.support.StandardMultipartFile
      */
     @Scheduled(fixedRate = 3600000, initialDelay = 120000)
     public void cleanupSpringMultipartFiles() {
