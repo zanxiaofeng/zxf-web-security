@@ -37,7 +37,7 @@
         </tr>
     </table>
 </form>
-<h2>Uploading Files With Additional Form Data</h2>
+<h2>Uploading File With Additional Form Data</h2>
 <form method="POST" action="/uploadFileWithAdditionalData" enctype="multipart/form-data">
     <table>
         <tr>
@@ -51,6 +51,30 @@
         <tr>
             <td>Select a file to upload: </td>
             <td><input type="file" name="file" /></td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="Submit" /></td>
+        </tr>
+    </table>
+</form>
+<h2>Uploading Multiple Files With Additional Form Data</h2>
+<form method="POST" action="/uploadFilesWithAdditionalData" enctype="multipart/form-data">
+    <table>
+        <tr>
+            <td>Name: </td>
+            <td><input type="text" name="name" /></td>
+        </tr>
+        <tr>
+            <td>Email: </td>
+            <td><input type="text" name="email" /></td>
+        </tr>
+        <tr>
+            <td>Select a file to upload: </td>
+            <td><input type="file" name="files" /></td>
+        </tr>
+        <tr>
+            <td>Select a file to upload: </td>
+            <td><input type="file" name="files" /></td>
         </tr>
         <tr>
             <td><input type="submit" value="Submit" /></td>

@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 @Controller
@@ -43,7 +44,12 @@ public class FileUploadController {
     }
 
     @PostMapping("/uploadMultiFile")
-    public ModelAndView uploadMultiFile(@RequestParam("files") MultipartFile[] files) {
+    public ModelAndView uploadMultiFile(@RequestParam("files") MultipartFile[] files) throws IOException {
+        for (int i = 0; i < files.length; i++) {
+            // 在Windows系统中，打开InputStream而不关闭，会导致底层打开的文件被占用，也会导致MultipartResolver.cleanupMultipart()方法不能删除该文件。
+            files[i].getInputStream();
+        }
+
         ModelAndView modelAndView = new ModelAndView("file_uploaded_multiple_view");
         modelAndView.addObject("files", files);
         return modelAndView;
