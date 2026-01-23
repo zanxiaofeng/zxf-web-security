@@ -47,7 +47,8 @@ public class FileUploadController {
     public ModelAndView uploadMultiFile(@RequestParam("files") MultipartFile[] files) throws IOException {
         for (int i = 0; i < files.length; i++) {
             // 在Windows系统中，打开InputStream而不关闭，会导致底层打开的文件被占用，也会导致MultipartResolver.cleanupMultipart()方法不能删除该文件。
-            files[i].getInputStream();
+            InputStream inputStream = files[i].getInputStream();
+            inputStream.readNBytes(102400);
         }
 
         ModelAndView modelAndView = new ModelAndView("file_uploaded_multiple_view");
