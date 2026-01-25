@@ -21,6 +21,7 @@ public class FileUploadControllerTest {
         body.add("files", new FileSystemResource(createTempFile(100 * 1024)));
         body.add("files", new FileSystemResource(createTempFile(200 * 1024)));
         body.add("files", new FileSystemResource(createTempFile(300 * 1024)));
+        body.add("close", true);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         for (int i = 0; i < 10000; i++) {
