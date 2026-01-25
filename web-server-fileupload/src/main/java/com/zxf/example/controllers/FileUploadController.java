@@ -48,6 +48,7 @@ public class FileUploadController {
         for (int i = 0; i < files.length; i++) {
             // 在Windows系统中，打开InputStream而不关闭，会导致底层打开的文件被占用，也会导致MultipartResolver.cleanupMultipart()方法不能删除该文件。
             InputStream inputStream = files[i].getInputStream();
+            //sun.nio.ch.ChannelInputStream(ch = sun.nio.ch.FileChannelImpl)
             inputStream.readNBytes(102400);
             if (close != null && close) {
                 inputStream.close();

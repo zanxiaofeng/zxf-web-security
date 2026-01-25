@@ -21,10 +21,10 @@ public class FileUploadControllerTest {
         body.add("files", new FileSystemResource(createTempFile(100 * 1024)));
         body.add("files", new FileSystemResource(createTempFile(200 * 1024)));
         body.add("files", new FileSystemResource(createTempFile(300 * 1024)));
-        body.add("close", true);
+        body.add("close", false);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 1; i++) {
             String requestUrl = "http://localhost:8085/uploadMultiFile";
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
             ResponseEntity<String> response = new RestTemplate().postForEntity(requestUrl, requestEntity, String.class);

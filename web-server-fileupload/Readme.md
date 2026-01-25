@@ -90,3 +90,169 @@ at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
 
 # Java Web Application层打开InputStream而不关闭的问题
 - 在Windows系统中，打开InputStream而不关闭，会导致底层打开的文件被占用，也会导致DiskFileItem.delete()不能成功删除文件。
+
+# How the underlay File Descriptor of an unclosed inputStream was closed by JDK
+- java.lang.ref.Cleaner
+- jdk.internal.ref.CleanerFactory
+- sun.nio.ch.FileChannelImpl.Closer
+## How FileChannelImpl to register closer for File Descriptor
+```code
+    private FileChannelImpl(FileDescriptor fd, String path, boolean readable, boolean writable, boolean direct, Object parent) {
+        this.fd = fd;
+        this.readable = readable;
+        this.writable = writable;
+        this.parent = parent;
+        this.path = path;
+        this.direct = direct;
+        this.nd = new FileDispatcherImpl();
+        if (direct) {
+            assert path != null;
+
+            this.alignment = this.nd.setDirectIO(fd, path);
+        } else {
+            this.alignment = -1;
+        }
+
+        this.closer = parent != null ? null : CleanerFactory.cleaner().register(this, new Closer(fd));
+    }
+```
+```stacks
+at java.lang.ref.Cleaner.register(Cleaner.java:218)
+at sun.nio.ch.FileChannelImpl.<init>(FileChannelImpl.java:145)
+at sun.nio.ch.FileChannelImpl.open(FileChannelImpl.java:154)
+at sun.nio.fs.UnixChannelFactory.newFileChannel(UnixChannelFactory.java:134)
+at sun.nio.fs.UnixChannelFactory.newFileChannel(UnixChannelFactory.java:146)
+at sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:216)
+at java.nio.file.Files.newByteChannel(Files.java:380)
+at java.nio.file.Files.newByteChannel(Files.java:432)
+at java.nio.file.spi.FileSystemProvider.newInputStream(FileSystemProvider.java:422)
+at java.nio.file.Files.newInputStream(Files.java:160)
+at org.apache.tomcat.util.http.fileupload.disk.DiskFileItem.get(DiskFileItem.java:305)
+at org.apache.tomcat.util.http.fileupload.disk.DiskFileItem.getString(DiskFileItem.java:328)
+at org.apache.catalina.core.ApplicationPart.getString(ApplicationPart.java:124)
+at org.apache.catalina.connector.Request.parseParts(Request.java:2613)
+at org.apache.catalina.connector.Request.getParts(Request.java:2487)
+at org.apache.catalina.connector.RequestFacade.getParts(RequestFacade.java:773)
+at org.springframework.web.multipart.support.StandardMultipartHttpServletRequest.parseRequest(StandardMultipartHttpServletRequest.java:94)
+at org.springframework.web.multipart.support.StandardMultipartHttpServletRequest.<init>(StandardMultipartHttpServletRequest.java:87)
+at org.springframework.web.multipart.support.StandardServletMultipartResolver.resolveMultipart(StandardServletMultipartResolver.java:112)
+at org.springframework.web.servlet.DispatcherServlet.checkMultipart(DispatcherServlet.java:1228)
+at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1061)
+at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+at java.lang.Thread.run(Thread.java:840)
+```
+
+## How the Closer was called
+```code
+    private static class Closer implements Runnable {
+        private final FileDescriptor fd;
+
+        Closer(FileDescriptor fd) {
+            this.fd = fd;
+        }
+
+        public void run() {
+            try {
+                FileChannelImpl.fdAccess.close(this.fd);
+            } catch (IOException ioe) {
+                throw new UncheckedIOException("close", ioe);
+            }
+        }
+    }
+```
+```stacks
+at java.io.FileDescriptor$1.close(FileDescriptor.java:88)
+at sun.nio.ch.FileChannelImpl$Closer.run(FileChannelImpl.java:115)
+at jdk.internal.ref.CleanerImpl$PhantomCleanableRef.performCleanup(CleanerImpl.java:178)
+at jdk.internal.ref.PhantomCleanable.clean(PhantomCleanable.java:133)
+at sun.nio.ch.FileChannelImpl.implCloseChannel(FileChannelImpl.java:207)
+at java.nio.channels.spi.AbstractInterruptibleChannel.close(AbstractInterruptibleChannel.java:112)
+at sun.nio.ch.ChannelInputStream.close(ChannelInputStream.java:142)
+at org.apache.tomcat.util.http.fileupload.disk.DiskFileItem.get(DiskFileItem.java:307)
+at org.apache.tomcat.util.http.fileupload.disk.DiskFileItem.getString(DiskFileItem.java:328)
+at org.apache.catalina.core.ApplicationPart.getString(ApplicationPart.java:124)
+at org.apache.catalina.connector.Request.parseParts(Request.java:2613)
+at org.apache.catalina.connector.Request.getParts(Request.java:2487)
+at org.apache.catalina.connector.RequestFacade.getParts(RequestFacade.java:773)
+at org.springframework.web.multipart.support.StandardMultipartHttpServletRequest.parseRequest(StandardMultipartHttpServletRequest.java:94)
+at org.springframework.web.multipart.support.StandardMultipartHttpServletRequest.<init>(StandardMultipartHttpServletRequest.java:87)
+at org.springframework.web.multipart.support.StandardServletMultipartResolver.resolveMultipart(StandardServletMultipartResolver.java:112)
+at org.springframework.web.servlet.DispatcherServlet.checkMultipart(DispatcherServlet.java:1228)
+at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1061)
+at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+at java.lang.Thread.run(Thread.java:840)
+```
