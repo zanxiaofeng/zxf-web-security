@@ -14,6 +14,11 @@ import java.io.InputStream;
 @Controller
 public class FileUploadController {
 
+    @GetMapping("/execGc")
+    public void execGc() {
+        System.gc();
+    }
+
     @GetMapping("/fileUploader")
     public ModelAndView fileUploader() {
         ModelAndView modelAndView = new ModelAndView("file_uploader_view");
@@ -46,10 +51,13 @@ public class FileUploadController {
     @PostMapping("/uploadMultiFile")
     public ModelAndView uploadMultiFile(@RequestParam("files") MultipartFile[] files, @RequestParam(value = "close", required = false) Boolean close) throws IOException {
         for (int i = 0; i < files.length; i++) {
-            // 在Windows系统中，打开InputStream而不关闭，会导致底层打开的文件被占用，也会导致MultipartResolver.cleanupMultipart()方法不能删除该文件。
             InputStream inputStream = files[i].getInputStream();
             //sun.nio.ch.ChannelInputStream(ch = sun.nio.ch.FileChannelImpl)
             inputStream.readNBytes(102400);
+            // 在Windows系统中，打开InputStream而不关闭，会导致底层fd不能被释放，打开的文件被占用，也会导致MultipartResolver.cleanupMultipart()方法不能删除该文件。
+            // 在Linux系统中， ，打开InputStream而不关闭，会导致底层fd不能被释放，打开的Inode被占用， 虽然MultipartResolver.cleanupMultipart()方法可以删除该文件，
+            // 这会导致有很多“Deleted but open files”，可以使用lsof +L1查看，可以使用gdb -p <pid> -batch -ex "call (int)close(<FD>)"
+            // 该文件已经删除，不能通过ls看到，但由于Inode还有引用，所以文件内容不会立即消失，磁盘空间不会立即释放。
             if (close != null && close) {
                 inputStream.close();
             }
