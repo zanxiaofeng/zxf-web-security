@@ -318,7 +318,7 @@ at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:5
 at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
 at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
-at java.lang.Thread.run(Thread.java:840)
+at java.lang.JVM Cleaner 机制使用详解read.run(Thread.java:840)
 --------------------------
 java    35047 davis  101r      REG             259,11    102400 8797496 /tmp/upload_2be51a16_cf8e_4c0c_9e1b_d571f252d624_00000002.tmp (deleted)
 java    35047 davis  102r      REG             259,11    102400 8797501 /tmp/upload_2be51a16_cf8e_4c0c_9e1b_d571f252d624_00000004.tmp (deleted)
@@ -333,3 +333,15 @@ at java.lang.Thread.run(Thread.java:840)
 at jdk.internal.misc.InnocuousThread.run(InnocuousThread.java:162)
 
 ```
+
+# 
+## Cleanable
+- java.lang.ref.Cleaner.Cleanable
+- jdk.internal.ref.PhantomCleanable<T> extends PhantomReference<T> implements Cleaner.Cleanable
+- final java.io.FileCleanable extends PhantomCleanable<FileDescriptor>
+- final java.net.SocketCleanable extends PhantomCleanable<FileDescriptor>
+- final jdk.internal.ref.CleanerImpl.CleanerCleanable extends PhantomCleanable<Cleaner> 
+- final jdk.internal.ref.CleanerImpl.PhantomCleanableRef
+## 
+- final java.lang.ref.Cleaner
+- final jdk.internal.ref.CleanerImpl
