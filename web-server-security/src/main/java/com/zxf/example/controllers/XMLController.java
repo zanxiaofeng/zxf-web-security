@@ -8,7 +8,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLInputFactory;
@@ -22,25 +21,15 @@ import java.io.StringReader;
 @RestController
 @RequestMapping("/xml")
 public class XMLController {
-    @PostMapping("/DocumentBuilder/security-1")
+    @PostMapping("/DocumentBuilder/security")
     public String securityDocumentBuilder1(@RequestBody String xml) throws ParserConfigurationException, IOException, SAXException {
-        System.out.println("XMLController::securityDocumentBuilder1" + xml);
+        System.out.println("XMLController::securityDocumentBuilder" + xml);
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-        dbf.setXIncludeAware(false);
-        return getContent(dbf, xml);
-    }
-
-    @PostMapping("/DocumentBuilder/security-2")
-    public String securityDocumentBuilder2(@RequestBody String xml) throws ParserConfigurationException, IOException, SAXException {
-        System.out.println("XMLController::securityDocumentBuilder2" + xml);
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
-        dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-        dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-        dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        dbf.setXIncludeAware(false);
-        dbf.setExpandEntityReferences(false);
+        try {
+            dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        } catch (ParserConfigurationException e) {
+            throw new IllegalStateException("ParserConfigurationException was thrown. The feature 'disallow-doctype-decl' is not supported by your XML processor.", e);
+        }
         return getContent(dbf, xml);
     }
 
@@ -51,20 +40,12 @@ public class XMLController {
         return getContent(dbf, xml);
     }
 
-    @PostMapping("/XMLInputFactory/security-1")
-    public String securityXMLInputFactory1(@RequestBody String xml) throws XMLStreamException {
-        System.out.println("XMLController::securityXMLInputFactory1" + xml);
-        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
-        return getContent(xmlInputFactory, xml);
-    }
-
-    @PostMapping("/XMLInputFactory/security-2")
+    @PostMapping("/XMLInputFactory/security")
     public String securityXMLInputFactory2(@RequestBody String xml) throws XMLStreamException {
-        System.out.println("XMLController::securityXMLInputFactory2" + xml);
+        System.out.println("XMLController::securityXMLInputFactory" + xml);
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        xmlInputFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         xmlInputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+        xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
         return getContent(xmlInputFactory, xml);
     }
 

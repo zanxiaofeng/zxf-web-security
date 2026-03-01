@@ -7,7 +7,6 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
@@ -109,7 +108,7 @@ public class DescriptorMonitor {
      */
     public static List<FileDescriptorInfo> listOpenFileDescriptors() {
         List<FileDescriptorInfo> result = new ArrayList<>();
-        Path fdDir = Paths.get("/proc/self/fd");
+        Path fdDir = Path.of("/proc/self/fd");
 
         if (!Files.exists(fdDir)) {
             return result;
@@ -158,7 +157,7 @@ public class DescriptorMonitor {
 
         @Override
         public String toString() {
-            return String.format("FD[%d] -> %s (%s)", fd, target, type());
+            return "FD[%d] -> %s (%s)".formatted(fd, target, type());
         }
     }
 

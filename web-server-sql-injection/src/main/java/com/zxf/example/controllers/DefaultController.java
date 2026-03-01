@@ -49,7 +49,7 @@ public class DefaultController {
         log.info("unSecurityUpdate:: id={}", id);
         try (Connection connection = dataSource.getConnection()) {
             String newName = "New - " + LocalDateTime.now();
-            String query = String.format("UPDATE CUSTOMER SET NAME='%s' WHERE ID='%s'", newName, id);
+            String query = "UPDATE CUSTOMER SET NAME='%s' WHERE ID='%s'".formatted(newName, id);
             log.info("unSecurityUpdate:: query={}", query);
 
             try (Statement statement = connection.createStatement()) {
@@ -74,7 +74,7 @@ public class DefaultController {
     @GetMapping("/un-security/query/single")
     public Customer unSecuritySingleQuery(@RequestParam String id) {
         log.info("unSecuritySingleQuery:: id={}", id);
-        String query = String.format("SELECT * FROM CUSTOMER WHERE ID='%s'", id);
+        String query = "SELECT * FROM CUSTOMER WHERE ID='%s'".formatted(id);
         log.info("unSecuritySingleQuery:: query={}", query);
 
         try {
@@ -97,7 +97,7 @@ public class DefaultController {
     @GetMapping("/un-security/query/list")
     public List<Customer> unSecurityListQuery(@RequestParam String title) {
         log.info("unSecurityListQuery:: title={}", title);
-        String query = String.format("SELECT * FROM CUSTOMER WHERE TITLE='%s'", title);
+        String query = "SELECT * FROM CUSTOMER WHERE TITLE='%s'".formatted(title);
         log.info("unSecurityListQuery:: query={}", query);
 
         return namedParameterJdbcTemplate.query(query, new CustomerRowMapper());

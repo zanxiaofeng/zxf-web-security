@@ -30,6 +30,22 @@ Or run the JAR directly:
 java -jar <module-name>/target/<module-name>-0.0.1-SNAPSHOT.jar
 ```
 
+Run OpenRewrite automated migrations (Spring Boot 3.5, Java 21, security best practices):
+```bash
+mvn rewrite:run
+```
+
+## Testing
+
+Only `web-server-fileupload` has automated tests. The test in `FileUploadControllerTest` is an **integration test** that requires the server to be running on port 8085 — run it manually after starting the module.
+
+To test CORS behavior manually, use the provided script:
+```bash
+cd web-server-cors && bash test.sh
+```
+
+The `web-server-tester` module (port 8081) hosts static HTML pages for browser-based manual testing of all other modules.
+
 ## Module Structure
 
 Each module is an independent Spring Boot application with its own port:
@@ -57,30 +73,32 @@ Each module is an independent Spring Boot application with its own port:
 ### Key Modules Details
 
 **web-server-fileupload**: Demonstrates secure file upload handling using a registry pattern:
-- `DocumentChecker` interface with implementations for different file types (PDF, Word, Excel, PowerPoint, CSV, Images, ZIP)
-- `DocumentSanitizer` interface for cleaning uploaded files
-- Uses Aspose libraries for document inspection and iTextPDF for PDFs
+- `DocumentType` enum maps file extensions to `DocumentChecker` and `DocumentSanitizer` implementations
+- Supported types: PDF (iTextPDF), Word/Excel/PowerPoint (Aspose), CSV (OpenCSV), Image, ZIP
+- `DocumentChecker.isSafe()` validates file content; `DocumentSanitizer.sanitize()` strips malicious content
+- Only CSV has a sanitizer implementation (`CsvDocumentSanitizer`); other unsafe files are rejected outright
+- `ExchangeController` demonstrates file exchange with an external service via `RestTemplate`
 
 **web-server-sql-injection**: Demonstrates SQL injection prevention:
-- Secure endpoints use `PreparedStatement` or `JdbcTemplate` with parameterized queries
-- Insecure endpoints use `Statement` with string concatenation (for demonstration)
+- Secure endpoints (`/security/**`) use `PreparedStatement` or `JdbcTemplate`/`NamedParameterJdbcTemplate` with parameterized queries
+- Insecure endpoints (`/un-security/**`) use `Statement` with string concatenation (for demonstration only)
 - Uses Flyway for database migrations in `src/main/resources/db/migration/`
 - Requires MySQL database running on port 3308 (use `docker-compose up`)
 
-**web-server-cors**: Shows CORS configuration via `GlobalCORSConfiguration` implementing `WebMvcConfigurer`
+**web-server-cors**: CORS is configured via `GlobalCORSConfiguration` (implements `WebMvcConfigurer`), which disables cross-origin access to `/my/**`. Also has a `WebSecurityConfig` that allows GET/POST/PUT via `StrictHttpFirewall`.
 
-**web-server-csrf**: Configures CSRF with `CookieCsrfTokenRepository.withHttpOnlyFalse()`
+**web-server-csrf**: Configures CSRF with `CookieCsrfTokenRepository.withHttpOnlyFalse()` so JavaScript can read the XSRF-TOKEN cookie.
 
-**web-server-firewall**: Customizes `StrictHttpFirewall` to restrict allowed HTTP methods
+**web-server-firewall**: Restricts HTTP methods to GET only via `StrictHttpFirewall` in `WebSecurityConfig`.
 
-**web-server-security**: Configures security headers including CSP, HSTS, X-Frame-Options, X-Content-Type-Options, etc.
+**web-server-security**: Configures response security headers via `WebSecurityConfig`: Cache-Control, X-Frame-Options, X-Content-Type-Options, XSS-Protection, HSTS, Referrer-Policy, and CSP (`default-src 'self'`). Also has an `XMLController` for XXE demonstration.
 
 ## Dependencies
 
 The project uses Spring Boot 3.3.6 with Java 17. The parent POM manages versions for:
 - MySQL Connector
 - Flyway (database migrations)
-- Aspose (Words, Cells, Slides for document processing)
+- Aspose (Words, Cells, Slides for document processing) — fetched from `https://releases.aspose.com/java/repo/`
 - iTextPDF
 - OpenCSV
 - Jakarta Validation API

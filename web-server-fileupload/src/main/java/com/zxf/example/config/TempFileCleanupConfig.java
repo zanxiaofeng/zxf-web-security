@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Stream;
@@ -50,7 +49,7 @@ public class TempFileCleanupConfig {
      */
     @Scheduled(fixedRate = 3600000, initialDelay = 60000)
     public void cleanupTempMultipartFiles() {
-        cleanupDirectory(Paths.get(multipartLocation), "upload_", 1);
+        cleanupDirectory(Path.of(multipartLocation), "upload_", 1);
     }
 
     /**
@@ -71,7 +70,7 @@ public class TempFileCleanupConfig {
      */
     @Scheduled(fixedRate = 3600000, initialDelay = 120000)
     public void cleanupSpringMultipartFiles() {
-        cleanupDirectory(Paths.get(multipartLocation), "spring-", 1);
+        cleanupDirectory(Path.of(multipartLocation), "spring-", 1);
     }
 
     private void cleanupDirectory(Path dirPath, String prefix, int hoursOld) {
@@ -87,7 +86,7 @@ public class TempFileCleanupConfig {
                         try {
                             return Files.getLastModifiedTime(p).toInstant().isBefore(cutoff);
                         } catch (IOException e) {
-                            log.warn("Failed to get last modified time for: {}", p, e);
+                            log.error("Failed to get last modified time for: {}", p, e);
                             return false;
                         }
                     })
@@ -96,11 +95,11 @@ public class TempFileCleanupConfig {
                             Files.deleteIfExists(p);
                             log.debug("Deleted temp file: {}", p);
                         } catch (IOException e) {
-                            log.warn("Failed to delete temp file: {}", p, e);
+                            log.error("Failed to delete temp file: {}", p, e);
                         }
                     });
         } catch (IOException e) {
-            log.warn("Failed to list temp directory: {}", dirPath, e);
+            log.error("Failed to list temp directory: {}", dirPath, e);
         }
     }
 }

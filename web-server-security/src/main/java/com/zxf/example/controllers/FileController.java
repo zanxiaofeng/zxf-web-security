@@ -13,14 +13,13 @@ import java.io.IOException;
 import java.net.URLConnection;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
 @Controller
 @RequestMapping("/file")
 public class FileController {
-    private static final Path FOLDER = Paths.get("./src/main/resources/static/my");
+    private static final Path FOLDER = Path.of("./src/main/resources/static/my");
 
     @GetMapping("/security")
     public ResponseEntity<FileSystemResource> security(@RequestParam String fileName) throws IOException {
@@ -88,14 +87,14 @@ public class FileController {
         // /usr/bin/vim -> /etc/alternatives/vim -> /usr/bin/vim.basic
 
         String baseFolder = "/var/www/";
-        Path myPath = Paths.get(baseFolder).resolve("../../usr/bin/vim");
+        Path myPath = Path.of(baseFolder).resolve("../../usr/bin/vim");
         File myFile = myPath.toFile();
 
         System.out.println("Path::toString, " + myPath);
         System.out.println("Path::startsWith, " + myPath.startsWith(baseFolder));
         System.out.println("Path::normalize, " + myPath.normalize());
         System.out.println("Path::normalize.getParent, " + myPath.normalize().getParent());
-        System.out.println("Path::normalize.getParent, " + myPath.normalize().getParent().equals(Paths.get("/usr/bin")));
+        System.out.println("Path::normalize.getParent, " + myPath.normalize().getParent().equals(Path.of("/usr/bin")));
         System.out.println("Path::toAbsolutePath, " + myPath.toAbsolutePath());
         try {
             // This method will resolve symbol link
