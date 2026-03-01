@@ -8,6 +8,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLInputFactory;
@@ -26,10 +27,24 @@ public class XMLController {
         System.out.println("XMLController::securityDocumentBuilder" + xml);
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try {
+            /*
+              - disallow-doctype-decl — blocks DOCTYPE declarations outright
+              - external-general-entities / external-parameter-entities — blocks entity expansion
+              - load-external-dtd — blocks external DTD loading
+              - FEATURE_SECURE_PROCESSING — enables processor-level security constraints
+              - setXIncludeAware(false) — blocks XInclude attacks
+              - setExpandEntityReferences(false) — blocks entity reference expansion
+             */
             dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         } catch (ParserConfigurationException e) {
-            throw new IllegalStateException("ParserConfigurationException was thrown. The feature 'disallow-doctype-decl' is not supported by your XML processor.", e);
+            throw new IllegalStateException("XML processor does not support required security features.", e);
         }
+        dbf.setXIncludeAware(false);
+        dbf.setExpandEntityReferences(false);
         return getContent(dbf, xml);
     }
 
