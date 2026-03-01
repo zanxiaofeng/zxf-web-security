@@ -1,7 +1,6 @@
 package com.zxf.example.exception;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,11 +14,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 
+@Slf4j
 @RestControllerAdvice
 public class MyExceptionHandler {
-
-    private static final Logger log = LoggerFactory.getLogger(MyExceptionHandler.class);
-
     // 400 - client sent a bad request
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
