@@ -1,17 +1,10 @@
 package com.zxf.example.controllers;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.Map;
 
-import static org.springframework.web.bind.annotation.RequestMethod.*;
-
-/*
-
- */
 @RestController
 @RequestMapping("/default")
 public class DefaultController {

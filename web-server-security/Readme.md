@@ -37,7 +37,7 @@ http://localhost:8084/file/un-security/..%2Fhome.txt[400 Bad Request]
 - docx=>application/vnd.openxmlformats-officedocument.wordprocessingml.document
 
 # Test XXE
-curl --location --request POST 'http://localhost:8084/xml//DocumentBuilder/security-1' \
+curl --location --request POST 'http://localhost:8084/xml/XMLInputFactory/un-security' \
   --header 'Content-Type: text/plain' \
   --data-raw '<?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE foo [
