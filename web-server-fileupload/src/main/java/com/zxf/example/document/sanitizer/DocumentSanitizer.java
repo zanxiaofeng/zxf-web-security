@@ -1,18 +1,13 @@
 package com.zxf.example.document.sanitizer;
 
-import com.opencsv.exceptions.CsvException;
-import com.zxf.example.document.checker.DocumentChecker;
-
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public interface DocumentSanitizer {
-    public byte[] sanitize(ByteArrayInputStream inputStream) throws IOException, CsvException;
+    byte[] sanitize(ByteArrayInputStream inputStream) throws Exception;
 
-    Map<Class<? extends DocumentSanitizer>, DocumentSanitizer> documentSanitizers = new HashMap<>();
+    Map<Class<? extends DocumentSanitizer>, DocumentSanitizer> documentSanitizers = new ConcurrentHashMap<>();
 
     static void register(Class<? extends DocumentSanitizer> type, DocumentSanitizer documentSanitizer) {
         documentSanitizers.put(type, documentSanitizer);

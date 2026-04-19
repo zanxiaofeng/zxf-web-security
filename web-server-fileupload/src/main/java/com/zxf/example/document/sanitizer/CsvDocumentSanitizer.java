@@ -2,45 +2,49 @@ package com.zxf.example.document.sanitizer;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-import com.opencsv.exceptions.CsvException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
-import java.util.Arrays;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.List;
 
 @Slf4j
 @Component
 public class CsvDocumentSanitizer implements DocumentSanitizer {
-    private final List<Character> BEGIN_CHARACTERS = Arrays.asList('=', '+', '-', '@', Character.valueOf((char) 0x09), Character.valueOf((char) 0x0d));
+    private static final List<Character> DANGEROUS_BEGIN_CHARACTERS = List.of('=', '+', '-', '@', '\t', '\r');
 
     public CsvDocumentSanitizer() {
         DocumentSanitizer.register(CsvDocumentSanitizer.class, this);
     }
 
     @Override
-    public byte[] sanitize(ByteArrayInputStream inputStream) throws IOException, CsvException {
+    public byte[] sanitize(ByteArrayInputStream inputStream) throws Exception {
         inputStream.reset();
-        try (Reader inputStreamReader = new InputStreamReader(inputStream); CSVReader csvReader = new CSVReader(inputStreamReader)) {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            try (Writer outputStreamWriter = new OutputStreamWriter(byteArrayOutputStream); CSVWriter csvWriter = new CSVWriter(outputStreamWriter)) {
+        try (Reader reader = new InputStreamReader(inputStream);
+             CSVReader csvReader = new CSVReader(reader)) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try (Writer writer = new OutputStreamWriter(baos);
+                 CSVWriter csvWriter = new CSVWriter(writer)) {
                 for (String[] record : csvReader.readAll()) {
                     for (int i = 0; i < record.length; i++) {
-                        if (needSanitize(record[i])) {
-                            System.out.println("BEFORE: " + record[i]);
+                        if (needsSanitize(record[i])) {
+                            log.debug("Sanitizing CSV cell: [{}] -> [{}]", record[i], "'" + record[i]);
                             record[i] = "'" + record[i];
-                            System.out.println("AFTER : " + record[i]);
                         }
                     }
                     csvWriter.writeNext(record);
                 }
             }
-            return byteArrayOutputStream.toByteArray();
+            return baos.toByteArray();
         }
     }
 
-    private boolean needSanitize(String cellValue) {
-        return !cellValue.isEmpty() && BEGIN_CHARACTERS.contains(cellValue.charAt(0));
+    private boolean needsSanitize(String cellValue) {
+        return !cellValue.isEmpty() && DANGEROUS_BEGIN_CHARACTERS.contains(cellValue.charAt(0));
     }
 }

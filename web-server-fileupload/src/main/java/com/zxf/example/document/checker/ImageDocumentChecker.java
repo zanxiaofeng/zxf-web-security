@@ -33,15 +33,15 @@ public class ImageDocumentChecker implements DocumentChecker {
         }
     }
 
-    private Boolean isAllowedFormat(String fileExtension) throws Exception {
+    private boolean isAllowedFormat(String fileExtension) throws Exception {
         return ALLOWED_FORMATS.contains(fileExtension);
     }
 
-    private Boolean hasSafeContent(ByteArrayInputStream stream) throws Exception {
+    private boolean hasSafeContent(ByteArrayInputStream stream) throws Exception {
         stream.reset();
         BufferedImage image = ImageIO.read(stream);
         if (image == null) {
-            log.error("Content can not be read as an image.");
+            log.warn("Content cannot be read as an image.");
             return false;
         }
         return true;

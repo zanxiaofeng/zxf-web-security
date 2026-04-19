@@ -1,10 +1,9 @@
 package com.zxf.example.document;
 
-import com.aspose.words.FileFormatInfo;
-import com.aspose.words.FileFormatUtil;
 import com.zxf.example.document.checker.*;
 import com.zxf.example.document.sanitizer.CsvDocumentSanitizer;
 import com.zxf.example.document.sanitizer.DocumentSanitizer;
+import com.zxf.example.document.sanitizer.PdfDocumentSanitizer;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -15,9 +14,9 @@ import java.util.Arrays;
 @AllArgsConstructor
 public enum DocumentType {
     Word("doc,docx", WordDocumentChecker.class, null),
-    Pdf("pdf", PdfDocumentChecker.class, null),
+    Pdf("pdf", PdfDocumentChecker.class, PdfDocumentSanitizer.class),
     Excel("xls,xlsx", ExcelDocumentChecker.class, null),
-    Powerpoint("ppt", PowerpointDocumentChecker.class, null),
+    Powerpoint("ppt,pptx", PowerpointDocumentChecker.class, null),
     Csv("csv", CsvDocumentChecker.class, CsvDocumentSanitizer.class),
     Image("jpg,png,tiff", ImageDocumentChecker.class, null);
 

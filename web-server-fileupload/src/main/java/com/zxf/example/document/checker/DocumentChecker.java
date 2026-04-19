@@ -1,14 +1,13 @@
 package com.zxf.example.document.checker;
 
-import com.aspose.words.FileFormatInfo;
 import java.io.ByteArrayInputStream;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public interface DocumentChecker {
     boolean isSafe(ByteArrayInputStream inputStream, String fileExtension);
 
-    Map<Class<? extends DocumentChecker>, DocumentChecker> documentCheckers = new HashMap<>();
+    Map<Class<? extends DocumentChecker>, DocumentChecker> documentCheckers = new ConcurrentHashMap<>();
 
     static void register(Class<? extends DocumentChecker> type, DocumentChecker documentChecker) {
         documentCheckers.put(type, documentChecker);

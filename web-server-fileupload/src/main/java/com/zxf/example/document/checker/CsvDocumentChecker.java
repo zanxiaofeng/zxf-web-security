@@ -34,12 +34,13 @@ public class CsvDocumentChecker implements DocumentChecker {
         }
     }
 
-    private Boolean isAllowedFormat(FileFormatInfo fileFormatInfo) throws Exception {
+    private boolean isAllowedFormat(FileFormatInfo fileFormatInfo) throws Exception {
         String formatExtension = FileFormatUtil.loadFormatToExtension(fileFormatInfo.getLoadFormat());
         return ALLOWED_FORMATS.contains(formatExtension);
     }
 
-    private Boolean hasSafeContent(ByteArrayInputStream stream) throws Exception {
-        return false;
+    private boolean hasSafeContent(ByteArrayInputStream stream) throws Exception {
+        // CSV content safety is handled by CsvDocumentSanitizer during sanitization
+        return true;
     }
 }

@@ -28,17 +28,17 @@ public class WordDocumentChecker implements DocumentChecker {
 
             return hasSafeContent(inputStream);
         } catch (Exception ex) {
-            log.error("Exception during World file analysis.", ex);
+            log.error("Exception during Word file analysis.", ex);
             return false;
         }
     }
 
-    private Boolean isAllowedFormat(FileFormatInfo fileFormatInfo) throws Exception {
+    private boolean isAllowedFormat(FileFormatInfo fileFormatInfo) throws Exception {
         String formatExtension = FileFormatUtil.loadFormatToExtension(fileFormatInfo.getLoadFormat());
         return ALLOWED_FORMATS.contains(formatExtension);
     }
 
-    private Boolean hasSafeContent(ByteArrayInputStream stream) throws Exception {
+    private boolean hasSafeContent(ByteArrayInputStream stream) throws Exception {
         stream.reset();
 
         Document document = new Document(stream);

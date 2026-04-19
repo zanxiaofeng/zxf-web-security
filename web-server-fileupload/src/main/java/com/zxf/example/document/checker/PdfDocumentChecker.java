@@ -33,17 +33,17 @@ public class PdfDocumentChecker implements DocumentChecker {
 
             return hasSafeContent(inputStream);
         } catch (Exception ex) {
-            log.error("Exception during World file analysis.", ex);
+            log.error("Exception during PDF file analysis.", ex);
             return false;
         }
     }
 
-    private Boolean isAllowedFormat(FileFormatInfo fileFormatInfo) throws Exception {
+    private boolean isAllowedFormat(FileFormatInfo fileFormatInfo) throws Exception {
         String formatExtension = FileFormatUtil.loadFormatToExtension(fileFormatInfo.getLoadFormat());
         return ALLOWED_FORMATS.contains(formatExtension);
     }
 
-    private Boolean hasSafeContent(ByteArrayInputStream stream) throws Exception {
+    private boolean hasSafeContent(ByteArrayInputStream stream) throws Exception {
         stream.reset();
 
         PdfReader pdfReader = new PdfReader(stream);
@@ -56,9 +56,12 @@ public class PdfDocumentChecker implements DocumentChecker {
             return true;
         }
 
-        PdfArray embeddedFileNames = names.getAsDict(PdfName.EMBEDDEDFILES).getAsArray(PdfName.NAMES);
-        if (embeddedFileNames != null && !embeddedFileNames.isEmpty()) {
-            return false;
+        PdfDictionary embeddedFilesDict = names.getAsDict(PdfName.EMBEDDEDFILES);
+        if (embeddedFilesDict != null) {
+            PdfArray embeddedFileNames = embeddedFilesDict.getAsArray(PdfName.NAMES);
+            if (embeddedFileNames != null && !embeddedFileNames.isEmpty()) {
+                return false;
+            }
         }
 
         return true;

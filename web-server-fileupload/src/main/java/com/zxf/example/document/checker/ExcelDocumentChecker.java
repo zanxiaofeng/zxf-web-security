@@ -4,7 +4,8 @@ import com.aspose.cells.MsoDrawingType;
 import com.aspose.cells.OleObject;
 import com.aspose.cells.Workbook;
 import com.aspose.cells.Worksheet;
-import com.aspose.words.*;
+import com.aspose.words.FileFormatInfo;
+import com.aspose.words.FileFormatUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -37,12 +38,12 @@ public class ExcelDocumentChecker implements DocumentChecker {
         }
     }
 
-    private Boolean isAllowedFormat(FileFormatInfo fileFormatInfo) throws Exception {
+    private boolean isAllowedFormat(FileFormatInfo fileFormatInfo) throws Exception {
         String formatExtension = FileFormatUtil.loadFormatToExtension(fileFormatInfo.getLoadFormat());
         return ALLOWED_FORMATS.contains(formatExtension);
     }
 
-    private Boolean hasSafeContent(ByteArrayInputStream stream) throws Exception {
+    private boolean hasSafeContent(ByteArrayInputStream stream) throws Exception {
         stream.reset();
 
         Workbook workbook = new Workbook(stream);
