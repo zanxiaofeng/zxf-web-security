@@ -37,7 +37,12 @@ mvn rewrite:run
 
 ## Testing
 
-Only `web-server-fileupload` has automated tests. The test in `FileUploadControllerTest` is an **integration test** that requires the server to be running on port 8085 — run it manually after starting the module.
+Only `web-server-fileupload` has automated tests. The tests in `FileUploadControllerTest` are **integration tests** that start their own embedded server on a random port (`@SpringBootTest(webEnvironment = RANDOM_PORT)`) — no need to start the module on port 8085 first:
+
+```bash
+cd web-server-fileupload
+mvn test -Dtest=FileUploadControllerTest
+```
 
 To test CORS behavior manually, use the provided script:
 ```bash

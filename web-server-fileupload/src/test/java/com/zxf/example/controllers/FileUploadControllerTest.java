@@ -41,6 +41,32 @@ class FileUploadControllerTest {
         }
     }
 
+    @Test
+    void uploadFilesWithAdditionalData() throws Exception {
+        Path file1 = createTempFile(10 * 1024);
+        Path file2 = createTempFile(20 * 1024);
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("name", "Alice");
+        body.add("email", "alice@example.com");
+        body.add("files[0].file", new FileSystemResource(file1));
+        body.add("files[0].category", "document");
+        body.add("files[0].tags", "urgent");
+        body.add("files[0].tags", "final");
+        body.add("files[1].file", new FileSystemResource(file2));
+        body.add("files[1].category", "photo");
+        // 故意不发 files[1].tags，验证 tags 为空时绑定与渲染都正常
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/uploadFilesWithAdditionalData",
+                new HttpEntity<>(body, headers), String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).contains("Alice", "alice@example.com",
+                "document", "urgent", "final", "photo",
+                file1.getFileName().toString(), file2.getFileName().toString());
+    }
+
     private Path createTempFile(int size) throws IOException {
         Path tempFile = Files.createTempFile("test-my-", ".tmp");
         byte[] content = new byte[size];

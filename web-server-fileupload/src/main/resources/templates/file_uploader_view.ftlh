@@ -70,11 +70,47 @@
         </tr>
         <tr>
             <td>Select a file to upload: </td>
-            <td><input type="file" name="files" /></td>
+            <td><input type="file" name="files[0].file" /></td>
+        </tr>
+        <tr>
+            <td>Category: </td>
+            <td>
+                <select name="files[0].category">
+                    <option value="document">Document</option>
+                    <option value="photo">Photo</option>
+                    <option value="other">Other</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Tags: </td>
+            <td>
+                <input type="checkbox" name="files[0].tags" value="urgent" /> Urgent
+                <input type="checkbox" name="files[0].tags" value="final" /> Final
+                <input type="checkbox" name="files[0].tags" value="draft" /> Draft
+            </td>
         </tr>
         <tr>
             <td>Select a file to upload: </td>
-            <td><input type="file" name="files" /></td>
+            <td><input type="file" name="files[1].file" /></td>
+        </tr>
+        <tr>
+            <td>Category: </td>
+            <td>
+                <select name="files[1].category">
+                    <option value="document">Document</option>
+                    <option value="photo">Photo</option>
+                    <option value="other">Other</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Tags: </td>
+            <td>
+                <input type="checkbox" name="files[1].tags" value="urgent" /> Urgent
+                <input type="checkbox" name="files[1].tags" value="final" /> Final
+                <input type="checkbox" name="files[1].tags" value="draft" /> Draft
+            </td>
         </tr>
         <tr>
             <td><input type="submit" value="Submit" /></td>

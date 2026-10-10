@@ -9,28 +9,36 @@
 <table>
     <tr>
         <td>Name:</td>
-        <td>${name}</td>
+        <td>${name!''}</td>
     </tr>
     <tr>
         <td>Email:</td>
-        <td>${email}</td>
+        <td>${email!''}</td>
     </tr>
 </table>
 <hr>
 <h3>Files</h3>
 <table>
-    <#list files as file>
+    <#list files as item>
         <tr>
             <td>OriginalFileName:</td>
-            <td>${file.originalFilename}</td>
+            <td>${(item.file.originalFilename)!''}</td>
         </tr>
         <tr>
             <td>Type:</td>
-            <td>${file.contentType}</td>
+            <td>${(item.file.contentType)!''}</td>
         </tr>
         <tr>
             <td>Size:</td>
-            <td>${file.size}</td>
+            <td>${item.file.size}</td>
+        </tr>
+        <tr>
+            <td>Category:</td>
+            <td>${item.category!'-'}</td>
+        </tr>
+        <tr>
+            <td>Tags:</td>
+            <td><#if item.tags?has_content>${item.tags?join(", ")}<#else>-</#if></td>
         </tr>
         <tr><td>&nbsp;</td><td></td></tr>
     </#list>
