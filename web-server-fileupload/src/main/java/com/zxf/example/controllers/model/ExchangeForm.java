@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @ToString
-public class ExchangeRequest {
+public class ExchangeForm {
     private Request request;
     private MultipartFile[] attachments;
 

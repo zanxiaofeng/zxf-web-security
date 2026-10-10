@@ -1,6 +1,6 @@
 package com.zxf.example.controllers;
 
-import com.zxf.example.controllers.model.ExchangeRequest;
+import com.zxf.example.controllers.model.ExchangeForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -22,9 +22,8 @@ public class ExchangeController {
     @Autowired
     private RestTemplate restTemplate;
 
-    //Validated do not take effective
     @PostMapping("/exchange1")
-    public String exchange1(@Validated @ModelAttribute ExchangeRequest request) throws IOException {
+    public String exchange1(@Validated @ModelAttribute ExchangeForm request) throws IOException {
         log.info("exchange1, request={}", request);
         for (int i = 0; i < request.getAttachments().length; i++) {
             MultipartFile attachment = request.getAttachments()[i];
@@ -35,7 +34,7 @@ public class ExchangeController {
     }
 
     @PostMapping("/exchange2")
-    public String exchange2(@Validated @RequestPart ExchangeRequest.Request request, @RequestPart(required = false) MultipartFile[] attachments) throws IOException {
+    public String exchange2(@Validated @RequestPart ExchangeForm.Request request, @RequestPart(required = false) MultipartFile[] attachments) throws IOException {
         log.info("exchange2, request={}, attachments={}", request, attachments);
         for (int i = 0; i < attachments.length; i++) {
             MultipartFile attachment = attachments[i];
@@ -51,7 +50,7 @@ public class ExchangeController {
         Thread thread = new Thread(() -> {
             log.info("Start Exchange-1 Test");
 
-            ExchangeRequest.Request request = new ExchangeRequest.Request(to, "Test Exchange 1", "Hi, Davis ZAN");
+            ExchangeForm.Request request = new ExchangeForm.Request(to, "Test Exchange 1", "Hi, Davis ZAN");
 
             MultipartBodyBuilder multipartBodyBuilder = new MultipartBodyBuilder();
             multipartBodyBuilder.part("request", request, MediaType.APPLICATION_JSON);
@@ -76,7 +75,7 @@ public class ExchangeController {
         Thread thread = new Thread(() -> {
             log.info("Start Exchange-2 Test");
 
-            ExchangeRequest.Request request = new ExchangeRequest.Request(to, "Test Exchange 2", "Hi, Davis ZAN");
+            ExchangeForm.Request request = new ExchangeForm.Request(to, "Test Exchange 2", "Hi, Davis ZAN");
 
             MultipartBodyBuilder multipartBodyBuilder = new MultipartBodyBuilder();
             multipartBodyBuilder.part("request", request, MediaType.APPLICATION_JSON);

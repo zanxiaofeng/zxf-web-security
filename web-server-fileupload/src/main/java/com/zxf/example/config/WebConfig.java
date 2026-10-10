@@ -1,6 +1,6 @@
 package com.zxf.example.config;
 
-import com.zxf.example.converter.StringToExchangeRequestConverter;
+import com.zxf.example.converter.StringToExchangeFormConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -9,6 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(new StringToExchangeRequestConverter());
+        registry.addConverter(new StringToExchangeFormConverter());
     }
 }
